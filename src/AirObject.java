@@ -1,0 +1,140 @@
+/**
+ * Main class for all air objects inclusing airplanes, balloons, birds, drones
+ * and rockets.
+ * 
+ * @author madelync05 and ellae
+ * @version Fall 2025
+ */
+public class AirObject
+    implements Comparable<AirObject>
+{
+    // ~ Fields ................................................................
+
+    private int xOrig;
+    private int yOrig;
+    private int zOrig;
+    private int xWidth;
+    private int yWidth;
+    private int zWidth;
+    private String name;
+
+    // ~ Constructors ..........................................................
+    /**
+     * Create a new AirObject object.
+     * 
+     * @param xO
+     *            x-cord for origin
+     * @param yO
+     *            y-cord for origin
+     * @param zO
+     *            z-cord for origin
+     * @param xW
+     *            x-cord for width
+     * @param yW
+     *            y-cord for width
+     * @param zW
+     *            z-cord for width
+     * @param n
+     *            object name
+     */
+    public AirObject(int xO, int yO, int zO, int xW, int yW, int zW, String n)
+    {
+        xOrig = xO;
+        yOrig = yO;
+        zOrig = zO;
+        xWidth = xW;
+        yWidth = yW;
+        zWidth = zW;
+        name = n;
+    }
+
+
+    // ~Public Methods ........................................................
+    /**
+     * Returns the x-cord for for origin
+     * 
+     * @return x-cord for origin
+     */
+    public int getXorig()
+    {
+        return xOrig;
+    }
+
+
+    /**
+     * Returns the y-cord for for origin
+     * 
+     * @return y-cord for origin
+     */
+    public int getYorig()
+    {
+        return yOrig;
+    }
+
+
+    /**
+     * Returns the z-cord for for origin
+     * 
+     * @return z-cord for origin
+     */
+    public int getZorig()
+    {
+        return zOrig;
+    }
+
+
+    /**
+     * Returns the x-cord for for width
+     * 
+     * @return x-cord for width
+     */
+    public int getXwidth()
+    {
+        return xWidth;
+    }
+
+
+    /**
+     * Returns the y-cord for for width
+     * 
+     * @return y-cord for width
+     */
+    public int getYwidth()
+    {
+        return yWidth;
+    }
+
+
+    /**
+     * Returns the z-cord for for width
+     * 
+     * @return z-cord for width
+     */
+    public int getZwidth()
+    {
+        return zWidth;
+    }
+
+
+    /**
+     * Returns name of the air object
+     * 
+     * @return object name
+     */
+    public String getName()
+    {
+        return name;
+    }
+
+
+    /**
+     * Compares the names of two air objects
+     * 
+     * @return 0 if names are equal, negative or positive value if names are
+     *             different
+     */
+    public int compareTo(AirObject other)
+    {
+        return this.name.compareTo(other.getName());
+    }
+}
