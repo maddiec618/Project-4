@@ -36,6 +36,14 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
                 forward[i] = null;
             }
         }
+        /**
+         * to string method 
+         * 
+         * @return the string representation of the node
+         */
+        public String toString() {
+            return value.toString();
+          }
 //        /**
 //         * creates a skip node object with no parameters
 //         */
@@ -123,7 +131,17 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
      * prints the skip list
      */
     public String print() {
-        return "SkipList is empty";
+        if(size==0) {
+        return "SkipList is empty";}
+        String re= "";
+        re+= head.forward[0].toString();
+        re+=head.forward[1].toString();
+        return re;
+//        for(int i = 0; i < size; i++) {
+//        re+= head.forward[i].toString();
+//        }
+//        return re; 
+        
     }
     public int getSize() {
         return size;

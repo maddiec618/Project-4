@@ -84,5 +84,17 @@ public class Bird
         }
         return !(type==null||number<1);
     }
-
+    /**
+     * to string method for the object
+     * @return a string representation of the object
+     */
+    public String toString() {
+        if (getName()==null) {
+            return null;
+        }
+        return "Bird "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
+            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ type+" "+number
+           + "\n"; 
+        
+    }
 }

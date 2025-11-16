@@ -72,19 +72,19 @@ public class AirControlTest extends TestCase {
 //                + "5 Bintree nodes printed\r\n",
 //                w.printbintree());
 //
-//        assertFuzzyEquals(
-//            "Node has depth 3, Value (null)\r\n"
-//                + "Node has depth 3, "
-//                + "Value (Airplane Air1 0 10 1 20 2 30 USAir 717 4)\r\n"
-//                + "Node has depth 1, "
-//                + "Value (Drone Air2 100 1010 101 924 2 900 Droners 3)\r\n"
-//                + "Node has depth 2, "
-//                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
-//                + "Node has depth 2, "
-//                + "Value (Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1)\r\n"
-//                + "4 skiplist nodes printed\r\n",
-//                w.printskiplist());
-//
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Airplane Air1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone Air2 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1)\r\n"
+                + "4 skiplist nodes printed\r\n",
+                w.printskiplist());
+
 //        assertFuzzyEquals(
 //            "Found these records in the range a to z\r\n"
 //                + "Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1\r\n",
