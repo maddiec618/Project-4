@@ -137,4 +137,17 @@ public class AirObject
     {
         return this.name.compareTo(other.getName());
     }
+    /**
+     * sees if the input would be valid
+     * 
+     * @return true if the object is valid, false otherwise
+     */
+    public boolean isValid() {
+        if (xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023 || zOrig < 0 || zOrig > 1023
+            ||getXwidth()<1||getXwidth()+xOrig>1025||getYwidth()<1||getYwidth()+yOrig>1025
+            ||getZwidth()<1||getZwidth()+zOrig>1025||name==null) {
+            return false;
+        }
+        return true;
+    }
 }

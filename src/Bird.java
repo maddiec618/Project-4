@@ -73,5 +73,16 @@ public class Bird
     {
         return number;
     }
+    /**
+     * sees if the input would be valid
+     * 
+     * @return true if the object is valid, false otherwise
+     */
+    public boolean isValid() {
+        if (!super.isValid()) {
+            return false;
+        }
+        return !(type==null||number<1);
+    }
 
 }

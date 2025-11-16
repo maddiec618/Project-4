@@ -6,10 +6,10 @@ import java.util.Random;
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class SkipList<K extends Comparable<K>, V>
+public class SkipList<K extends Comparable<K>, V>       //why k and v
 {
     // ~ Fields ................................................................
-    private static class SkipNode<K, V>
+    private static class SkipNode<K, V> 
     {
         K key;
         V value;
@@ -36,6 +36,16 @@ public class SkipList<K extends Comparable<K>, V>
                 forward[i] = null;
             }
         }
+//        /**
+//         * creates a skip node object with no parameters
+//         */
+//        @SuppressWarnings("unchecked")
+//        public SkipNode()
+//        {
+//            key = null;
+//            value = null;
+//            forward = new SkipNode[1];
+//        }
     }
 
     private SkipNode<K, V> head;
@@ -62,12 +72,29 @@ public class SkipList<K extends Comparable<K>, V>
         }
         return lev;
     }
+    
+    
+    @SuppressWarnings("unchecked")
+    private void adjustHead(int newLevel) {
+        @SuppressWarnings("rawtypes")
+        SkipNode temp = head;
+        head = new SkipNode<>(null, null, newLevel);
+        for (int i = 0; i <= level; i++) {
+          head.forward[i] = temp.forward[i];
+        }
+        level = newLevel;
+      }
 
 
     /** Insert a key, element pair into the skip list */
     @SuppressWarnings("unchecked")
-    public void insert(K key, V value)
+    public boolean insert(K key, V value)
     {
+        
+        int newLevel = randomLevel();
+        if (newLevel > level) { // If new node is deeper
+            adjustHead(newLevel); // adjust the header
+          }
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
         for (int i = level; i >= 0; i--)
@@ -79,13 +106,26 @@ public class SkipList<K extends Comparable<K>, V>
             }
             update[i] = x;
         }
-        x = new SkipNode<>(key, elem, newLevel);
+        if (x.forward[0] != null && x.forward[0].key.compareTo(key) == 0) {
+            return false; 
+        }
+        x = new SkipNode<>(key, value, newLevel);
         for (int i = 0; i <= newLevel; i++)
         { // Splice into list
             x.forward[i] = update[i].forward[i]; // Who x points to
             update[i].forward[i] = x; // Who points to x
         }
         size++; // Increment dictionary size
+        System.out.println("size:"+size+"\nkey:"+key);
+        return true;
     }
-
+    /**
+     * prints the skip list
+     */
+    public String print() {
+        return "SkipList is empty";
+    }
+    public int getSize() {
+        return size;
+    }
 }

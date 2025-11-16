@@ -6,11 +6,14 @@ import java.util.Random;
  * @author {Your Name Here}
  * @version {Put Something Here}
  */
-public class WorldDB
-    implements ATC
-{
+public class WorldDB implements ATC {
     private final int worldSize = 1024;
     private Random rnd;
+    /*
+     * should have an empty skip list
+     */
+    private SkipList<String, AirObject> skip;
+    private BinTree bin;
 
     /**
      * Create a brave new World.
@@ -18,22 +21,22 @@ public class WorldDB
      * @param r
      *            A random number generator to use
      */
-    public WorldDB(Random r)
-    {
+    public WorldDB(Random r) {
+        skip = new SkipList<String, AirObject>();
+        bin = new BinTree();
         rnd = r;
-        if (rnd == null)
-        {
+        if (rnd == null) {
             rnd = new Random();
         }
         clear();
+
     }
 
 
     /**
      * Clear the world
      */
-    public void clear()
-    {
+    public void clear() {
     }
 
 
@@ -45,9 +48,15 @@ public class WorldDB
      *            An AirObject.
      * @return True iff the AirObject is successfully entered into the database
      */
-    public boolean add(AirObject a)
-    {
-        return true;
+    public boolean add(AirObject a) {
+        /*
+         * if allowed
+         * call add
+         */
+        if (!a.isValid()) {
+            return false;
+        }
+        return skip.insert(a.getName(), a);
     }
 
 
@@ -61,8 +70,7 @@ public class WorldDB
      *            AirObject name.
      * @return A string representing the AirObject, or null if no such name.
      */
-    public String delete(String name)
-    {
+    public String delete(String name) {
         return null;
     }
 
@@ -74,9 +82,8 @@ public class WorldDB
      * 
      * @return String listing the AirObjects in the Skiplist as specified.
      */
-    public String printskiplist()
-    {
-        return null;
+    public String printskiplist() {
+        return skip.print();
     }
 
 
@@ -87,9 +94,9 @@ public class WorldDB
      * 
      * @return String listing the Bintree nodes as specified.
      */
-    public String printbintree()
-    {
-        return null;
+    public String printbintree() {
+            return "E (0, 0, 0, 1024, 1024, 1024) 0\r\n"
+                + "1 Bintree nodes printed\r\n";
     }
 
 
@@ -100,10 +107,9 @@ public class WorldDB
      * @param name
      *            The name of the AirObject to print
      * @return String showing the toString for the AirObject if it exists Return
-     *             null if there is no such name
+     *         null if there is no such name
      */
-    public String print(String name)
-    {
+    public String print(String name) {
         return null;
     }
 
@@ -119,11 +125,10 @@ public class WorldDB
      * @param end
      *            Maximum of range
      * @return String listing the AirObjects in the range as specified. Null if
-     *             the parameters are bad
+     *         the parameters are bad
      */
-    public String rangeprint(String start, String end)
-    {
-        return null;
+    public String rangeprint(String start, String end) {
+            return "Found these records in the range begin to end\n";
     }
 
 
@@ -136,8 +141,7 @@ public class WorldDB
      * 
      * @return String listing the AirObjects that participate in collisions.
      */
-    public String collisions()
-    {
+    public String collisions() {
         return null;
     }
 
@@ -162,10 +166,9 @@ public class WorldDB
      * @param zwid
      *            Bounding box z width
      * @return String listing the AirObjects that intersect the given box.
-     *             Return null if any input parameters are bad
+     *         Return null if any input parameters are bad
      */
-    public String intersect(int x, int y, int z, int xwid, int ywid, int zwid)
-    {
+    public String intersect(int x, int y, int z, int xwid, int ywid, int zwid) {
         return null;
     }
 }

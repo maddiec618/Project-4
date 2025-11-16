@@ -71,5 +71,15 @@ public class Drone extends AirObject
     {
         return numEngines;
     }
-    
+    /**
+     * sees if the input would be valid
+     * 
+     * @return true if the object is valid, false otherwise
+     */
+    public boolean isValid() {
+        if (!super.isValid()) {
+            return false;
+        }
+        return !(brand==null||numEngines<1);
+    }
 }
