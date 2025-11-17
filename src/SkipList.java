@@ -14,6 +14,7 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
         K key;
         V value;
         SkipNode<K, V>[] forward;
+        int depth;
 
         /**
          * Create a new SkipNode object.
@@ -29,6 +30,7 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
         public SkipNode(K k, V v, int level)
         {
             key = k;
+            depth = level;
             value = v;
             forward = new SkipNode[level + 1];
             for (int i = 0; i < level; i++)
@@ -59,11 +61,12 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
     private SkipNode<K, V> head;
     private int level;
     private int size;
-    static private Random ran = new Random();
+    static private Random ran;
 
     // ~ Constructors ..........................................................
-    public SkipList()
+    public SkipList(Random r)
     {
+        ran = r;
         head = new SkipNode<>(null, null, 0);
         level = -1;
         size = 0;
@@ -76,6 +79,7 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
         int lev;
         for (lev = 0; Math.abs(ran.nextInt()) % 2 == 0; lev++)
         {
+            //if (lev >= 16) break;
             ;
         }
         return lev;
@@ -100,9 +104,12 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
     {
         
         int newLevel = randomLevel();
+//        System.out.println("Key "+key+"\n value "+value.toString());
+//        System.out.println("level "+level+" new level "+newLevel);
         if (newLevel > level) { // If new node is deeper
             adjustHead(newLevel); // adjust the header
           }
+//        System.out.println("level "+level+" new level "+newLevel);
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
         for (int i = level; i >= 0; i--)
@@ -110,11 +117,14 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
             while ((x.forward[i] != null)
                 && (x.forward[i].key.compareTo(key) < 0))
             {
+                //System.out.println("x old "+ x.toString());
                 x = x.forward[i];
+//                System.out.println("x new "+ x.toString());
             }
             update[i] = x;
         }
-        if (x.forward[0] != null && x.forward[0].key.compareTo(key) == 0) {
+        x = x.forward[0];
+        if (x != null && x.key.compareTo(key) == 0) {
             return false; 
         }
         x = new SkipNode<>(key, value, newLevel);
@@ -124,24 +134,44 @@ public class SkipList<K extends Comparable<K>, V>       //why k and v
             update[i].forward[i] = x; // Who points to x
         }
         size++; // Increment dictionary size
-        System.out.println("size:"+size+"\nkey:"+key);
+//        System.out.println("size:"+size+"\nkey:"+key);
         return true;
     }
     /**
      * prints the skip list
      */
+    @SuppressWarnings("rawtypes")
     public String print() {
-        if(size==0) {
-        return "SkipList is empty";}
-        String re= "";
-        re+= head.forward[0].toString();
-        re+=head.forward[1].toString();
-        return re;
-//        for(int i = 0; i < size; i++) {
-//        re+= head.forward[i].toString();
-//        }
-//        return re; 
+//        if(size==0) {
+//        return "SkipList is empty";}
+//        String re= "";
+//        
+//        for (int i = level; i >= 0; i--) {
+//            SkipNode node = head;
+//            re+="Level "+ i;
+//            while ((node.forward[i] != null)){
+////                if(node==null) {
+////                    re+= "node has depth "+i+" value null";
+////                }else {
+//              re+= "node has depth "+i+" value "+node.forward[i].toString();
+//              node = node.forward[i]; // Go one last step
+//            }
+//            }
+//        return re;
+//        
+        if (size == 0) {
+            return "SkipList is empty";
+        }
+        String re = "";
+        re+= "node has depth "+ (level+1) +" value null\n";
+        SkipNode<K, V> node = head.forward[0]; // Start at first real node at level 0
         
+        while (node != null) {
+            re += "Node has depth " + (node.depth+1) + ", Value: " + node.toString();
+            node = node.forward[0]; 
+        }
+        re+= size+" skiplist nodes printed";
+        return re;
     }
     public int getSize() {
         return size;

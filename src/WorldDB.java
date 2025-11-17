@@ -22,12 +22,12 @@ public class WorldDB implements ATC {
      *            A random number generator to use
      */
     public WorldDB(Random r) {
-        skip = new SkipList<String, AirObject>();
         bin = new BinTree();
         rnd = r;
         if (rnd == null) {
             rnd = new Random();
         }
+        skip = new SkipList<String, AirObject>(r);
         clear();
 
     }

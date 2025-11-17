@@ -84,4 +84,17 @@ public class Balloon
         }
         return !(type==null||ascentRate<1);
     }
+    /**
+     * to string method for the object
+     * @return a string representation of the object
+     */
+    public String toString() {
+        if (getName()==null) {
+            return null;
+        }
+        return "Balloon "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
+            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ type+" "+ascentRate
+            + "\n"; 
+        
+    }
 }

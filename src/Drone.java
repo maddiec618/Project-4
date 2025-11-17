@@ -82,4 +82,17 @@ public class Drone extends AirObject
         }
         return !(brand==null||numEngines<1);
     }
+    /**
+     * to string method for the object
+     * @return a string representation of the object
+     */
+    public String toString() {
+        if (getName()==null) {
+            return null;
+        }
+        return "Drone "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
+            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ brand+" "
+            + numEngines+ "\n"; 
+        
+    }
 }

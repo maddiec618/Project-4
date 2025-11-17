@@ -84,4 +84,17 @@ public class Rocket
         }
         return !(ascentRate<1||trajectory<1);
     }
+    /**
+     * to string method for the object
+     * @return a string representation of the object
+     */
+    public String toString() {
+        if (getName()==null) {
+            return null;
+        }
+        return "Rocket "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
+            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ ascentRate+" "+trajectory
+            + "\n"; 
+        
+    }
 }
