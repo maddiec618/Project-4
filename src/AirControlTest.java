@@ -459,11 +459,12 @@ public class AirControlTest extends TestCase {
             w.delete("D1"));
         assertFuzzyEquals("SkipList is empty", w.printskiplist());
         assertNull(w.delete("B2"));
+        System.out.println("hello");
         assertTrue(w.add(new Drone("D1",
             100, 1010, 101, 924, 2, 900, "Droners", 3)));
         assertFuzzyEquals(
             "Node has depth 3, Value (null)\r\n"
-                + "Node has depth 2, "
+                + "Node has depth 3, "
                 + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
                 + "1 skiplist nodes printed\r\n",
                 w.printskiplist());        
@@ -471,9 +472,9 @@ public class AirControlTest extends TestCase {
                     10, 11, 11, 21, 12, 31, "hot_air", 15)));
         assertFuzzyEquals(
             "Node has depth 3, Value (null)\r\n"
-                + "Node has depth 3, "
-                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
                 + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 3, "
                 + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
                 + "2 skiplist nodes printed\r\n",
                 w.printskiplist());
@@ -481,11 +482,11 @@ public class AirControlTest extends TestCase {
             0, 100, 20, 10, 50, 50, 100, 102.3)));
         assertFuzzyEquals(
             "Node has depth 3, Value (null)\r\n"
-                + "Node has depth 3, "
+                + "Node has depth 2, "
                 + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
-                + "Node has depth 2, "
+                + "Node has depth 3, "
                 + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
-                + "Node has depth 2, "
+                + "Node has depth 3, "
                 + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
                 + "3 skiplist nodes printed\r\n",
                 w.printskiplist());
@@ -495,14 +496,29 @@ public class AirControlTest extends TestCase {
         assertTrue(w.add(new AirPlane("A1",
             0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
         assertFuzzyEquals(
-            "Node has depth 4, Value (null)\r\n"
-                + "Node has depth 4, "
-                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
-                + "Node has depth 3, "
-                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+            "Node has depth 3, Value (null)\r\n"
                 + "Node has depth 2, "
+                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 3, "
                 + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
                 + "3 skiplist nodes printed\r\n",
                 w.printskiplist());
+    }
+    /**
+     * Test syntax: delete
+     *
+     * @throws Exception
+     */
+    public void testDeleteEmpty() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertFuzzyEquals("SkipList is empty", w.printskiplist());
+        assertNull(w.delete("B2"));
+        assertNull(w.delete("A2"));
+        assertNull(w.delete("B1"));
+        assertNull(w.delete(""));
     }
 }

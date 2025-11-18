@@ -45,22 +45,13 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
         public String toString() {
             return value.toString();
         }
-// /**
-// * creates a skip node object with no parameters
-// */
-// @SuppressWarnings("unchecked")
-// public SkipNode()
-// {
-// key = null;
-// value = null;
-// forward = new SkipNode[1];
-// }
     }
 
     private SkipNode<K, V> head;
     private int level;
     private int size;
     static private Random ran;
+    private int count;
 
     // ~ Constructors ..........................................................
     public SkipList(Random r) {
@@ -68,6 +59,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
         head = new SkipNode<>(null, null, 0);
         level = -1;
         size = 0;
+        count = 0;
     }
 
 
@@ -75,6 +67,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
     int randomLevel() {
         int lev;
         for (lev = 0; Math.abs(ran.nextInt()) % 2 == 0; lev++) {
+            System.out.println("he"+lev);
             // if (lev >= 16) break;
             ;
         }
@@ -97,14 +90,17 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
     /** Insert a key, element pair into the skip list */
     @SuppressWarnings("unchecked")
     public boolean insert(K key, V value) {
+        if(!(find(key)==null)){
+            return false;
+        }
 
         int newLevel = randomLevel();
-// System.out.println("Key "+key+"\n value "+value.toString());
-// System.out.println("level "+level+" new level "+newLevel);
+ System.out.println("Key "+key+"\n value "+value.toString());
+ System.out.println("level "+level+" new level "+newLevel);
         if (newLevel > level) { // If new node is deeper
             adjustHead(newLevel); // adjust the header
         }
-// System.out.println("level "+level+" new level "+newLevel);
+ System.out.println("level "+level+" new level "+newLevel);
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
         for (int i = level; i >= 0; i--) {
@@ -112,7 +108,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
                 key) < 0)) {
                 // System.out.println("x old "+ x.toString());
                 x = x.forward[i];
-// System.out.println("x new "+ x.toString());
+                System.out.println("x new "+ x.toString());
             }
             update[i] = x;
         }
@@ -196,6 +192,9 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
             size--;
             return x.value.toString();
         }
+//        if(size==0) {
+//            count ++;
+//        }
         return null;
     }
 
@@ -222,4 +221,5 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
         } // Got it
         return null;
     }
+    
 }
