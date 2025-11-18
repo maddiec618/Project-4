@@ -71,7 +71,7 @@ public class WorldDB implements ATC {
      * @return A string representing the AirObject, or null if no such name.
      */
     public String delete(String name) {
-        return null;
+        return skip.deleteKey(name);
     }
 
 
@@ -110,7 +110,7 @@ public class WorldDB implements ATC {
      *         null if there is no such name
      */
     public String print(String name) {
-        return null;
+        return skip.find(name);
     }
 
 

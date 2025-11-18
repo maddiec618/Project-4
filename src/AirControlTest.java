@@ -47,16 +47,16 @@ public class AirControlTest extends TestCase {
             0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
         assertFalse(w.add(new Bird("pterodactyl",
             0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
-//        assertTrue(w.add(new Rocket("Enterprise",
-//            0, 100, 20, 10, 50, 50, 5000, 99.29)));
+        assertTrue(w.add(new Rocket("Enterprise",
+            0, 100, 20, 10, 50, 50, 5000, 99.29)));
 
-//        assertFuzzyEquals(
-//            "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
-//            w.delete("Enterprise"));
-//
-//        assertFuzzyEquals("Airplane Air1 0 10 1 20 2 30 USAir 717 4",
-//            w.print("Air1"));
-//        assertNull(w.print("air1"));
+        assertFuzzyEquals(
+            "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
+            w.delete("Enterprise"));
+
+        assertFuzzyEquals("Airplane Air1 0 10 1 20 2 30 USAir 717 4",
+            w.print("Air1"));
+        assertNull(w.print("air1"));
 //
 //        assertFuzzyEquals(
 //            "I (0, 0, 0, 1024, 1024, 1024) 0\r\n"
@@ -243,6 +243,266 @@ public class AirControlTest extends TestCase {
                 + "Node has depth 2, "
                 + "Value (Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1)\r\n"
                 + "4 skiplist nodes printed\r\n",
+                w.printskiplist());
+    }
+    /**
+     * tests delete for skip lists when not in the list
+     *
+     * @throws Exception
+     */
+    public void testDeleteSkipNotIn() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1",
+            10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertTrue(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+        assertNull(w.delete("H2"));
+        assertNull(w.delete("s2"));
+        assertNull(w.delete("d1"));
+        assertNull(w.delete("b1"));
+        
+
+    }
+    /**
+     * tests delete for skip lists 
+     *
+     * @throws Exception
+     */
+    public void testDeleteSkip() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1",
+            10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertTrue(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+//        assertFuzzyEquals(
+//            "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
+//            w.delete("Enterprise"));
+        System.out.println( w.printskiplist());
+      assertFuzzyEquals(
+      "Bird B2 0 100 20 10 50 50 Dinosaur 1",
+      w.delete("B2"));
+      assertNull(w.delete("B2"));
+    }
+    /**
+     * tests find for skip lists
+     *
+     * @throws Exception
+     */
+    public void testFindSkip() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1",
+            10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertTrue(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+        assertFalse(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertFuzzyEquals("Bird B2 0 100 20 10 50 50 Dinosaur 1",
+            w.print("B2"));
+        assertFuzzyEquals("Airplane A1 0 10 1 20 2 30 USAir 717 4",
+            w.print("A1"));
+        assertFuzzyEquals("Drone D1 100 1010 101 924 2 900 Droners 3",
+            w.print("D1"));
+        assertNull(w.print("air1"));        
+        assertNull(w.print("a1"));
+        assertNull(w.print("b2"));
+
+    }
+    /**
+     * tests print for skip lists
+     *
+     * @throws Exception
+     */
+    public void testPrintSkip() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1",
+            10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertTrue(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+        assertFalse(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Bird B2 0 100 20 10 50 50 Dinosaur 1)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 1, "
+                + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
+                + "5 skiplist nodes printed\r\n",
+                w.printskiplist());
+    }
+    /**
+     * tests print for skip lists with deletions
+     *
+     * @throws Exception
+     */
+    public void testPrintSkipDelete() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1",
+            10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertTrue(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+        assertFalse(w.add(new Bird("B2",
+            0, 100, 20, 10, 50, 50, "Dinosaur", 1)));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Bird B2 0 100 20 10 50 50 Dinosaur 1)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 1, "
+                + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
+                + "5 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertFuzzyEquals(
+            "Bird B2 0 100 20 10 50 50 Dinosaur 1",
+            w.delete("B2"));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 1, "
+                + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
+                + "4 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertFuzzyEquals(
+            "Airplane A1 0 10 1 20 2 30 USAir 717 4",
+            w.delete("A1"));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 1, "
+                + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
+                + "3 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertFuzzyEquals(
+            "Rocket R1 0 100 20 10 50 50 100 102.3",
+            w.delete("R1"));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 2, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "2 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertNull(w.delete("R2"));
+        assertNull(w.delete("S2"));
+        assertNull(w.delete("A2"));
+        assertNull(w.delete("A1"));
+        assertFuzzyEquals(
+            "Balloon B1 10 11 11 21 12 31 hot_air 15",
+            w.delete("B1"));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 1, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "1 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertFuzzyEquals(
+            "Drone D1 100 1010 101 924 2 900 Droners 3",
+            w.delete("D1"));
+        assertFuzzyEquals("SkipList is empty", w.printskiplist());
+        assertNull(w.delete("B2"));
+        assertTrue(w.add(new Drone("D1",
+            100, 1010, 101, 924, 2, 900, "Droners", 3)));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 2, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "1 skiplist nodes printed\r\n",
+                w.printskiplist());        
+        assertTrue(w.add(new Balloon("B1",
+                    10, 11, 11, 21, 12, 31, "hot_air", 15)));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "2 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertTrue(w.add(new Rocket("R1",
+            0, 100, 20, 10, 50, 50, 100, 102.3)));
+        assertFuzzyEquals(
+            "Node has depth 3, Value (null)\r\n"
+                + "Node has depth 3, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "Node has depth 2, "
+                + "Value (Rocket R1 0 100 20 10 50 50 100 102.3)\r\n"
+                + "3 skiplist nodes printed\r\n",
+                w.printskiplist());
+        assertFuzzyEquals(
+            "Rocket R1 0 100 20 10 50 50 100 102.3",
+            w.delete("R1"));
+        assertTrue(w.add(new AirPlane("A1",
+            0, 10, 1, 20, 2, 30, "USAir", 717, 4)));
+        assertFuzzyEquals(
+            "Node has depth 4, Value (null)\r\n"
+                + "Node has depth 4, "
+                + "Value (Airplane A1 0 10 1 20 2 30 USAir 717 4)\r\n"
+                + "Node has depth 3, "
+                + "Value (Balloon B1 10 11 11 21 12 31 hot_air 15)\r\n"
+                + "Node has depth 2, "
+                + "Value (Drone D1 100 1010 101 924 2 900 Droners 3)\r\n"
+                + "3 skiplist nodes printed\r\n",
                 w.printskiplist());
     }
 }
