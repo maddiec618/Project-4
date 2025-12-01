@@ -22,14 +22,13 @@ public class WorldDB implements ATC {
      *            A random number generator to use
      */
     public WorldDB(Random r) {
-        bin = new BinTree();
+        bin = new BinTree(worldSize);
         rnd = r;
         if (rnd == null) {
             rnd = new Random();
         }
         skip = new SkipList<String, AirObject>(r);
         clear();
-
     }
 
 
@@ -37,6 +36,8 @@ public class WorldDB implements ATC {
      * Clear the world
      */
     public void clear() {
+        skip = new SkipList<String, AirObject>(rnd);
+        bin.clear();
     }
 
 
@@ -56,7 +57,15 @@ public class WorldDB implements ATC {
         if (!a.isValid()) {
             return false;
         }
-        return skip.insert(a.getName(), a);
+        
+        boolean insert = skip.insert(a.getName(), a);
+        
+        if (insert)
+        {
+            bin.insert(a);
+        }
+        
+        return insert;
     }
 
 
@@ -95,8 +104,7 @@ public class WorldDB implements ATC {
      * @return String listing the Bintree nodes as specified.
      */
     public String printbintree() {
-            return "E (0, 0, 0, 1024, 1024, 1024) 0\r\n"
-                + "1 Bintree nodes printed\r\n";
+            return bin.printTree();
     }
 
 
