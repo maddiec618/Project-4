@@ -55,7 +55,7 @@ public class AirObject
      * 
      * @return x-cord for origin
      */
-    public int getXorig()
+    public int getXOrig()
     {
         return xOrig;
     }
@@ -66,7 +66,7 @@ public class AirObject
      * 
      * @return y-cord for origin
      */
-    public int getYorig()
+    public int getYOrig()
     {
         return yOrig;
     }
@@ -77,7 +77,7 @@ public class AirObject
      * 
      * @return z-cord for origin
      */
-    public int getZorig()
+    public int getZOrig()
     {
         return zOrig;
     }
@@ -88,7 +88,7 @@ public class AirObject
      * 
      * @return x-cord for width
      */
-    public int getXwidth()
+    public int getXWidth()
     {
         return xWidth;
     }
@@ -99,7 +99,7 @@ public class AirObject
      * 
      * @return y-cord for width
      */
-    public int getYwidth()
+    public int getYWidth()
     {
         return yWidth;
     }
@@ -110,7 +110,7 @@ public class AirObject
      * 
      * @return z-cord for width
      */
-    public int getZwidth()
+    public int getZWidth()
     {
         return zWidth;
     }
@@ -144,8 +144,8 @@ public class AirObject
      */
     public boolean isValid() {
         if (xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023 || zOrig < 0 || zOrig > 1023
-            ||getXwidth()<1||getXwidth()+xOrig>1025||getYwidth()<1||getYwidth()+yOrig>1025
-            ||getZwidth()<1||getZwidth()+zOrig>1025||name==null) {
+            ||getXWidth()<1||getXWidth()+xOrig>1025||getYWidth()<1||getYWidth()+yOrig>1025
+            ||getZWidth()<1||getZWidth()+zOrig>1025||name==null) {
             return false;
         }
         return true;

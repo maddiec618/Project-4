@@ -108,8 +108,8 @@ public class AirPlane
         if (getName()==null) {
             return null;
         }
-        return "Airplane "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
-            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ carrier+" "+flightNum
+        return "Airplane "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
+            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ carrier+" "+flightNum
             +" "+ numEngines+ "\n"; 
         
     }

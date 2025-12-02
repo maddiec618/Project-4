@@ -92,8 +92,8 @@ public class Bird
         if (getName()==null) {
             return null;
         }
-        return "Bird "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
-            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ type+" "+number
+        return "Bird "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
+            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+number
            + "\n"; 
         
     }

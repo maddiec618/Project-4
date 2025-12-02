@@ -92,8 +92,8 @@ public class Balloon
         if (getName()==null) {
             return null;
         }
-        return "Balloon "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
-            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ type+" "+ascentRate
+        return "Balloon "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
+            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+ascentRate
             + "\n"; 
         
     }

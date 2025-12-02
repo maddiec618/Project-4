@@ -92,8 +92,8 @@ public class Rocket
         if (getName()==null) {
             return null;
         }
-        return "Rocket "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
-            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ ascentRate+" "+trajectory
+        return "Rocket "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
+            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ ascentRate+" "+trajectory
             + "\n"; 
         
     }

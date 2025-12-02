@@ -90,8 +90,8 @@ public class Drone extends AirObject
         if (getName()==null) {
             return null;
         }
-        return "Drone "+ getName() +" "+ getXorig()+" "+getYorig() +" "+getZorig()+
-            " "+getXwidth()+ " "+ getYwidth()+" "+getZwidth()+ " "+ brand+" "
+        return "Drone "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
+            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ brand+" "
             + numEngines+ "\n"; 
         
     }
