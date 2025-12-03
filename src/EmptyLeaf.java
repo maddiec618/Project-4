@@ -67,4 +67,19 @@ public class EmptyLeaf
 //            + zW + ") " + depth + " \r\n";
         return "";
     }
+
+
+    @Override
+    public BaseNode delete(
+        AirObject obj,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

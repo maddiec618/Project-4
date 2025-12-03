@@ -80,7 +80,14 @@ public class WorldDB implements ATC {
      * @return A string representing the AirObject, or null if no such name.
      */
     public String delete(String name) {
-        return skip.deleteKey(name);
+        if(name==null) {
+            return null;
+        }
+        AirObject value = skip.deleteKey(name);
+        if(value==null)
+            return null;
+        
+        return value.toString();
     }
 
 

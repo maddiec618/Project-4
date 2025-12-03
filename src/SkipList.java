@@ -168,7 +168,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
      * @return String representing the key that was removed, null otherwise
      */
     @SuppressWarnings("unchecked")
-    public String deleteKey(K key) {
+    public V deleteKey(K key) {
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
         // going through to find where key would be
@@ -190,7 +190,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
 //                level--;
 //            }
             size--;
-            return x.value.toString();
+            return x.value;
         }
 //        if(size==0) {
 //            count ++;

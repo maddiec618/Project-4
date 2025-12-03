@@ -1,18 +1,33 @@
-public class InternalNode implements BaseNode
-{
-    //~ Fields ................................................................
-    private BaseNode[] children = new BaseNode[8];
-    //~ Constructors ..........................................................
-    public InternalNode()
-    {
-        children = new BaseNode[8];
-        for (int i = 0; i < 8; i++) {
-            children[i] = EmptyLeaf.getInstance();
-        }
+public class InternalNode implements BaseNode {
+    // ~ Fields ................................................................
+    // private BaseNode[] children = new BaseNode[8];
+    private BaseNode left;
+    private BaseNode right;
+    public static int count;
+    public static int count2;
 
-        //EmptyLeaf.getInstance();
+    private int height;
+    private int discriminator;
+    
+
+    // ~ Constructors ..........................................................
+    public InternalNode(int h) {
+        this.discriminator = h % 3;
+        height = h;
+        count = 0;
+        count2=0;
+        this.left = EmptyLeaf.getInstance();
+        this.right = EmptyLeaf.getInstance();
+// children = new BaseNode[8];
+// for (int i = 0; i < 8; i++) {
+// children[i] = EmptyLeaf.getInstance();
+// }
+
+        // EmptyLeaf.getInstance();
     }
-    //~Public  Methods ........................................................
+
+
+    // ~Public Methods ........................................................
     @Override
     public BaseNode insert(
         AirObject obj,
@@ -22,67 +37,161 @@ public class InternalNode implements BaseNode
         int xW,
         int yW,
         int zW,
-        int depth)
-    {
-        if (!fitsInOctant(obj, x, y, z, xW, yW, zW)) {
-            // Object is too big - it crosses octant boundaries
-            // Convert this InternalNode into a LeafNode that stores the object
-            LeafNode leaf = new LeafNode();
-            leaf.addObject(obj);
-            return leaf;
+        int depth) {
+        int mid = 0;
+        this.height = depth;
+        this.discriminator = depth % 3; // will be zero one two
+        System.out.println(discriminator + "hehe");
+        /*
+         * if zero will split the current x in half
+         */
+        if (discriminator == 0) {
+            System.out.println("des = 0");
+            mid = x + xW / 2;
         }
-        
-        int octant = getOctant(obj, x, y, z, xW, yW, zW);
-        System.out.println(obj.toString()+"  =  "+octant);
-        int halfXW = xW / 2;
-        int halfYW = yW / 2;
-        int halfZW = zW / 2;
-        int childX = x + ((octant & 1) * halfXW);
-        int childY = y + ((octant & 2) >> 1) * halfYW;
-        int childZ = z + ((octant & 4) >> 2) * halfZW;
-        
-        // STEP 4: Recursively insert into appropriate child
-        children[octant] = children[octant].insert(
-            obj, childX, childY, childZ, halfXW, halfYW, halfZW, depth + 1);
-//        int childX=x;
-//        int childY=y;
-//        int childZ=z;
-//        if ((octant & 1) != 0) { 
-//            childX = x + halfXW;
+        else if (discriminator == 1) {
+            System.out.println("des = 1");
+            mid = y + yW / 2;
+        }
+        else if (discriminator == 2) {
+            System.out.println("des = 2");
+            mid = z + zW / 2;
+        }
+        else {
+            System.out.println("des = uhoh" + discriminator);
+        }
+//        boolean spans = false;
+//        if (discriminator == 0) {
+//            spans = obj.getXOrig() < mid && (obj.getXOrig() + obj
+//                .getXWidth()) > mid;
 //        }
-//        if ((octant & 2) != 0) {
-//            childY = y + halfYW;
+//        else if (discriminator == 1) {
+//            spans = obj.getYOrig() < mid && (obj.getYOrig() + obj
+//                .getYWidth()) > mid;
 //        }
-//        if ((octant & 4) != 0) {
-//            childZ = z + halfZW;
+//        else if (discriminator == 2) {
+//            spans = obj.getZOrig() < mid && (obj.getZOrig() + obj
+//                .getZWidth()) > mid;
 //        }
-//        children[octant] = children[octant].insert(
-//            obj, childX, childY, childZ, halfXW, halfYW, halfZW, depth + 1);
+//
+//        // If it spans, store it here as a leaf (so both halves implicitly "see"
+//        // it")
+//        if (spans) {
+//            System.out.println("spans"+obj.toString());
+//            LeafNode leaf = new LeafNode();
+//            leaf.insert(obj, x,y,z,0,0,0,depth+1);
+//            LeafNode leaf2 = new LeafNode();
+//            leaf2.insert(obj, x,y,z,xW,yW,zW,depth+1);
+//            // replaces this InternalNode at this location
+//        }
+        boolean goesLeft = false;
+        boolean fitRight = false;
+        if (discriminator == 0) {
+            System.out.println(mid + "\nmid  " + obj.toString());
+            goesLeft = obj.getXOrig() + obj.getXWidth() <= mid;
+            fitRight = obj.getXOrig() >= mid;
+            System.out.println(obj.getXOrig() < mid);
+        }
+        else if (discriminator == 1) {
+            goesLeft = obj.getYOrig()+ obj.getYWidth() <=  mid;
+            fitRight = obj.getYOrig() >= mid;
+        }
+        else if (discriminator == 2) {
+            goesLeft = obj.getZOrig()+ obj.getZWidth() <=  mid;
+            fitRight = obj.getYOrig() >= mid;
+        }
+        else {
+            System.out.println("error bool");
+        }
+        if (goesLeft) {
+            if (discriminator == 0) {
+                left = left.insert(obj, x, y, z, xW / 2, yW, zW, depth + 1);
+            }
+            else if (discriminator == 1) {
+                System.out.println("here");
+                left = left.insert(obj, x, y, z, xW, yW / 2, zW, depth + 1);
+
+            }
+            else if (discriminator == 2) {
+                left = left.insert(obj, x, y, z, xW, yW, zW / 2, depth + 1);
+            }
+            else {
+                System.out.println("error last");
+            }
+            System.out.println(depth + " depth");
+        }
+        else if (fitRight){
+            if (discriminator == 0) {
+                right = right.insert(obj, mid, y, z, xW - xW / 2, yW, zW, depth
+                    + 1);
+            }
+            else if (discriminator == 1) {
+                right = right.insert(obj, x, mid, z, xW, yW - yW / 2, zW, depth
+                    + 1);
+            }
+            else if (discriminator == 2) {
+                right = right.insert(obj, x, y, mid, xW, yW, zW - zW / 2, depth
+                    + 1);
+            }
+            else {
+                System.out.println("error last");
+            }
+        }
+        else {
+            if (discriminator == 0) {
+                right = right.insert(obj, mid, y, z, xW - xW / 2, yW, zW, depth
+                    + 1);
+                left = left.insert(obj, x, y, z, xW / 2, yW, zW, depth + 1);
+            }
+            else if (discriminator == 1) {
+                right = right.insert(obj, x, mid, z, xW, yW - yW / 2, zW, depth
+                    + 1);
+                left = left.insert(obj, x, y, z, xW, yW / 2, zW, depth + 1);
+            }
+            else if (discriminator == 2) {
+                right = right.insert(obj, x, y, mid, xW, yW, zW - zW / 2, depth
+                    + 1);
+                left = left.insert(obj, x, y, z, xW, yW, zW / 2, depth + 1);
+            }
+            
+        }
         return this;
+
     }
+
+
     /**
      * determines if the objet fits in one octant or spans multiple
      * 
      * @return boolean true if it is in one octant false if it spans multiple
      */
-    private boolean fitsInOctant(AirObject obj, int x, int y, int z, int xW, int yW, int zW) {
+    private boolean fitsInOctant(
+        AirObject obj,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW) {
         int midX = x + xW / 2;
         int midY = y + yW / 2;
         int midZ = z + zW / 2;
-        int objX1 = obj.getXOrig();           // origin
-        int objX2 = objX1 + obj.getXWidth();    // origin + width
-        
+        int objX1 = obj.getXOrig(); // origin
+        int objX2 = objX1 + obj.getXWidth(); // origin + width
+
         int objY1 = obj.getYOrig();
-        int objY2 = objY1 + obj.getYWidth(); 
-        
+        int objY2 = objY1 + obj.getYWidth();
+
         int objZ1 = obj.getZOrig();
-        int objZ2 = objZ1 + obj.getZWidth(); 
+        int objZ2 = objZ1 + obj.getZWidth();
         // Check if object's bounding box fits entirely in one octant
         boolean crossesX = (objX1 < midX && objX2 > midX);
         boolean crossesY = (objY1 < midY && objY2 > midY);
         boolean crossesZ = (objZ1 < midZ && objZ2 > midZ);
         return !(crossesX || crossesY || crossesZ);
     }
+
+
     private int getOctant(
         AirObject obj,
         int x,
@@ -90,63 +199,97 @@ public class InternalNode implements BaseNode
         int z,
         int xW,
         int yW,
-        int zW)
-    {
+        int zW) {
         int midX = x + xW / 2;
         int midY = y + yW / 2;
         int midZ = z + zW / 2;
         int octant = 0;
         if (obj.getXOrig() >= midX) {
-            octant |= 1;  // Set bit 0 (right side)
+            octant |= 1; // Set bit 0 (right side)
         }
         if (obj.getYOrig() >= midY) {
-            octant |= 2;  // Set bit 1 (back side)
+            octant |= 2; // Set bit 1 (back side)
         }
         if (obj.getZOrig() >= midZ) {
-            octant |= 4;  // Set bit 2 (top side)
+            octant |= 4; // Set bit 2 (top side)
         }
-        
+
         return octant;
     }
-   
-    
+
+
     @Override
-    public String print(int x, int y, int z, int xW, int yW, int zW, int depth)
-    {
-//        return "int with " + " objects (" + x + ", " + y + ", " + z
-//            + ", " + xW + ", " + yW + ", " + zW + ") " + depth + "\r\n";
-        String output = "I (" + x + ", " + y + ", " + z + ", " 
-            + xW + ", " + yW + ", " + zW + ") " + depth + "\r\n";
-        
-        // Calculate dimensions for children
-        int halfXW = xW / 2;
-        int halfYW = yW / 2;
-        int halfZW = zW / 2;
-        
-        // Recursively print all 8 children
-        for (int i = 0; i < 8; i++) {
-            // Calculate child's origin
-            int childX = x;
-            int childY = y;
-            int childZ = z;
-            
-            if ((i & 1) != 0) {
-                childX = x + halfXW;
+    public String print(
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth) {
+        BinTree.addCount();
+        count2++;
+        String temp = "";
+// return "int with " + " objects (" + x + ", " + y + ", " + z
+// + ", " + xW + ", " + yW + ", " + zW + ") " + depth + "\r\n";
+        String output = "I (" + x + ", " + y + ", " + z + ", " + xW + ", " + yW
+            + ", " + zW + ") " + depth + "\r\n";
+        if (discriminator == 0) {
+                output += left.print(x, y, z, xW / 2, yW, zW, depth + 1);       //to reduce lines
+            temp =right.print(x + xW / 2, y, z, xW - xW / 2, yW, zW, depth
+                + 1);
+            if(right.getClass().getName()!="EmptyLeaf"){
+                count++;
+                output += temp;
             }
-            if ((i & 2) != 0) {
-                childY = y + halfYW;
-            }
-            if ((i & 4) != 0) {
-                childZ = z + halfZW;
-            }
-            
-            // Print the child
-           
-            output += children[i].print(
-                childX, childY, childZ, halfXW, halfYW, halfZW, depth + 1);
         }
-        
+        else if (discriminator == 1) {
+            temp =left.print(x, y, z, xW, yW / 2, zW, depth + 1);
+            if(left.getClass().getName()!="EmptyLeaf"){
+                count++;
+                output += temp;
+            }
+            temp =right.print(x, y + yW / 2, z, xW, yW - yW / 2, zW, depth
+                + 1);
+            if(right.getClass().getName()!="EmptyLeaf"){
+                count++;
+                output += temp;
+            }
+
+        }
+        else  if (discriminator == 2){
+            temp =left.print(x, y, z, xW, yW, zW / 2, depth + 1);
+            if(left.getClass().getName()!="EmptyLeaf"){
+                count++;
+                output += temp;
+            }
+            temp =right.print(x, y, z + zW / 2, xW, yW, zW - zW / 2, depth
+                + 1);
+            if(right.getClass().getName()!="EmptyLeaf"){
+                count++;
+                output += temp;
+            }
+        }
+        System.out.println(count+"num1 "+count2);
+        BinTree.setCount(count2+count);
+
+
         return output;
+    }
+
+
+    @Override
+    public BaseNode delete(
+        AirObject obj,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
