@@ -109,9 +109,10 @@ public class LeafNode
         if (count < 3)
         {
             addObject(obj);
+            System.out.println("no split" + obj.toString());
             return this;
         }
-        
+        System.out.println("split" + obj.toString());
         AirObject[] temp = new AirObject[count + 1];
         for (int i = 0; i < count; i++)
         {
@@ -157,9 +158,17 @@ public class LeafNode
      *            depth of node
      * @return String output
      */
+    @Override
     public String print(int x, int y, int z, int xW, int yW, int zW, int depth)
     {
-        return "Leaf with " + count + " objects (" + x + ", " + y + ", " + z
+        String output = "";
+        output+= "Leaf with " + count + " objects (" + x + ", " + y + ", " + z
             + ", " + xW + ", " + yW + ", " + zW + ") " + depth + "\r\n";
+        for(AirObject air : objects) {
+            if(air!=null)
+            output+= air.toString();
+        }
+        return output;
+        
     }
 }
