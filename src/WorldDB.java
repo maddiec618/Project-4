@@ -57,14 +57,13 @@ public class WorldDB implements ATC {
         if (!a.isValid()) {
             return false;
         }
-        
+
         boolean insert = skip.insert(a.getName(), a);
-        
-        if (insert)
-        {
+
+        if (insert) {
             bin.insert(a);
         }
-        
+
         return insert;
     }
 
@@ -80,13 +79,13 @@ public class WorldDB implements ATC {
      * @return A string representing the AirObject, or null if no such name.
      */
     public String delete(String name) {
-        if(name==null) {
+        if (name == null) {
             return null;
         }
         AirObject value = skip.deleteKey(name);
-        if(value==null)
+        if (value == null)
             return null;
-        
+        bin.delete(value);
         return value.toString();
     }
 
@@ -111,7 +110,7 @@ public class WorldDB implements ATC {
      * @return String listing the Bintree nodes as specified.
      */
     public String printbintree() {
-            return bin.printTree();
+        return bin.printTree();
     }
 
 
@@ -143,8 +142,9 @@ public class WorldDB implements ATC {
      *         the parameters are bad
      */
     public String rangeprint(String start, String end) {
-        if(end==null||start==null) {
-            return null;}
+        if (end == null || start == null) {
+            return null;
+        }
         return "Found these records in the range begin to end\n";
     }
 
@@ -186,10 +186,12 @@ public class WorldDB implements ATC {
      *         Return null if any input parameters are bad
      */
     public String intersect(int x, int y, int z, int xwid, int ywid, int zwid) {
-        if(x<0||y<0||z<0||xwid<0||ywid<0||zwid<0||x>1023||y>1023||z>1023
-            ||xwid+x>1023||zwid+z>1023||ywid+y>1023) {
-        return null;}
-        return "The following objects intersect (1, 1, 1, 1, 1, 1)\n" +
-        "1 nodes were visited in the bintree\n";
+        if (x < 0 || y < 0 || z < 0 || xwid < 0 || ywid < 0 || zwid < 0
+            || x > 1023 || y > 1023 || z > 1023 || xwid + x > 1023 || zwid
+                + z > 1023 || ywid + y > 1023) {
+            return null;
+        }
+        return "The following objects intersect (1, 1, 1, 1, 1, 1)\n"
+            + "1 nodes were visited in the bintree\n";
     }
 }

@@ -4,8 +4,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public interface BaseNode
-{
+public interface BaseNode {
     // ----------------------------------------------------------
     /**
      * Inserts a new node object into the subtree.
@@ -60,6 +59,8 @@ public interface BaseNode
      * @return String output
      */
     public String print(int x, int y, int z, int xW, int yW, int zW, int depth);
+
+
     /**
      * deletes a node object from the subtree.
      * 
@@ -81,5 +82,13 @@ public interface BaseNode
      *            depth of node
      * @return BaseNode that now represents root
      */
-    public BaseNode delete(AirObject obj, int x, int y, int z, int xW, int yW, int zW, int depth);
+    public BaseNode delete(
+        AirObject obj,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth);
 }

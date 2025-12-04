@@ -237,6 +237,24 @@ public class LeafNode
         return output;
         
     }
+    
+    /**
+     * gets teh count of the leaf node
+     * @return in representing the number of objects in the node
+     */
+    public int getCount() {
+        return count;
+    }
+    /**
+     * gets tha array of objects
+     * @return the objects array
+     */
+    public AirObject[] getObjects() {
+        return objects;
+    }
+    public void insertDirect(AirObject obj) {
+        objects[count++] = obj; 
+    }
 
 
     @Override
@@ -249,7 +267,21 @@ public class LeafNode
         int yW,
         int zW,
         int depth) {
-        // TODO Auto-generated method stub
-        return null;
+        boolean removed = removeObject(obj);
+        if (!removed) return this;  
+        if (count == 0) return EmptyLeaf.getInstance(); 
+        return this;  
+    }
+    public boolean removeObject(AirObject obj) {
+        for (int i = 0; i < count; i++) {
+            if (objects[i] != null && objects[i]==obj) {
+                // shift down
+                for (int j = i; j < count - 1; j++) objects[j] = objects[j+1];
+                objects[count-1] = null;
+                count--;
+                return true;
+            }
+        }
+        return false;
     }
 }

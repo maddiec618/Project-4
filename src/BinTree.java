@@ -31,11 +31,12 @@ public static void addCount() {
     }
     
     
-    public boolean delete(AirObject obj) {
-        BaseNode newRoot = root.delete(obj, 0, 0, 0, worldSize, worldSize, worldSize);
-        boolean deleted = newRoot != root; // if tree changed, something was deleted
-        root = newRoot;
-        return deleted;
+    public void delete(AirObject obj) {
+          root = root.delete(obj, 0, 0, 0, worldSize, worldSize, worldSize,0);
+//        BaseNode newRoot = root.delete(obj, 0, 0, 0, worldSize, worldSize, worldSize);
+//        boolean deleted = newRoot != root; // if tree changed, something was deleted
+//        root = newRoot;
+//        return deleted;
     }
     
     public void insert(AirObject obj)

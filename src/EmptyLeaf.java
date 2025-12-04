@@ -80,6 +80,6 @@ public class EmptyLeaf
         int zW,
         int depth) {
         // TODO Auto-generated method stub
-        return null;
+        return this;
     }
 }
