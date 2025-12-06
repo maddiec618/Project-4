@@ -79,9 +79,9 @@ public class Rocket
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-        if (!super.isValid()) {
-            return false;
-        }
+//        if (!super.isValid()) {
+//            return false;
+//        }
         return !(ascentRate<1||trajectory<1);
     }
     /**
@@ -89,9 +89,9 @@ public class Rocket
      * @return a string representation of the object
      */
     public String toString() {
-        if (getName()==null) {
-            return null;
-        }
+//        if (getName()==null) {
+//            return null;
+//        }
         return "Rocket "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
             " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ ascentRate+" "+trajectory
             + "\n"; 

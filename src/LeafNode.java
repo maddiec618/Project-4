@@ -13,14 +13,13 @@ public class LeafNode
     private AirObject[] objects;
     private int height;
     private int count;
-    
 
     // ~ Constructors ..........................................................
     public LeafNode()
     {
-        objects = new AirObject[4];
+        objects = new AirObject[8];
         count = 0;
-        height =0;
+        height = 0;
     }
 
 
@@ -36,6 +35,7 @@ public class LeafNode
         objects[count] = obj;
         count++;
     }
+
 
     /**
      * Checks if two boxes have a non-empty intersection box
@@ -60,17 +60,37 @@ public class LeafNode
             && (b1Z < b2ZW && b2Z < b1ZW);
 
     }
-    
+
+
     /**
-     * Checks if all the boxes have a non-empty intersection box. 
+     * Checks if all the boxes have a non-empty intersection box.
      */
     private boolean allBoxesIntersect(AirObject[] boxes)
     {
-        for (int i = 0; i < 4; i++)
+        int n = 0;
+        for (int i = 0; i < boxes.length; i++)
         {
-            for (int j = i + 1; j < 4; j++)
+            if (boxes[i] != null)
             {
-                if (!twoIntersect(boxes[i], boxes[j]))
+                n++;
+            }
+        }
+
+        AirObject[] nonNull = new AirObject[n];
+        int idx = 0;
+        for (int i = 0; i < boxes.length; i++)
+        {
+            if (boxes[i] != null)
+            {
+                nonNull[idx++] = boxes[i];
+            }
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i + 1; j < n; j++)
+            {
+                if (!twoIntersect(nonNull[i], nonNull[j]))
                 {
                     return false;
                 }
@@ -78,6 +98,7 @@ public class LeafNode
         }
         return true;
     }
+
 
     /**
      * Inserts a new node object into the subtree.
@@ -112,29 +133,31 @@ public class LeafNode
         if (count < 3)
         {
             addObject(obj);
-            height = depth;
-            System.out.println("no split" + obj.toString());
             sortNode();
             return this;
         }
-        System.out.println("split" + obj.toString());
+        // System.out.println("split" + obj.toString());
         AirObject[] temp = new AirObject[count + 1];
         for (int i = 0; i < count; i++)
         {
             temp[i] = objects[i];
         }
         temp[count] = obj;
-        
-        if (count == 3)
+
+        if (xW <= 1 && yW <= 1 && zW <= 1)
         {
-            if (allBoxesIntersect(temp))
-            {
-                height = depth;
-                addObject(obj);
-                return this;
-            }
+            addObject(obj);
+            sortNode();
+            return this;
         }
-        
+
+        if (allBoxesIntersect(temp))
+        {
+            addObject(obj);
+            sortNode();
+            return this;
+        }
+
         InternalNode internal = new InternalNode(depth);
         for (int i = 0; i < temp.length; i++)
         {
@@ -142,17 +165,22 @@ public class LeafNode
         }
         return internal;
     }
-    
-    
-    
-    public void sortNode() {
+
+
+    public void sortNode()
+    {
         int n = 0;
-        for (AirObject obj : objects) {
-            if (obj != null) n++;
+        for (AirObject obj : objects)
+        {
+            if (obj != null)
+                n++;
         }
-        for (int i = 0; i < n-1; i++) {
-            for (int j = 0; j < n-1 - i; j++) {
-                if (objects[j].compareTo(objects[j + 1])>0) {
+        for (int i = 0; i < n - 1; i++)
+        {
+            for (int j = 0; j < n - 1 - i; j++)
+            {
+                if (objects[j].compareTo(objects[j + 1]) > 0)
+                {
                     // swap
                     AirObject temp = objects[j];
                     objects[j] = objects[j + 1];
@@ -160,46 +188,43 @@ public class LeafNode
                 }
             }
         }
-//        if(height%3 ==0) {
-//            for (int i = 0; i < n-1; i++) {
-//                for (int j = 0; j < n-1- i; j++) {
-//                    if (objects[j].getXOrig() > objects[j + 1].getXOrig()) {
-//                        // swap
-//                        AirObject temp = objects[j];
-//                        objects[j] = objects[j + 1];
-//                        objects[j + 1] = temp;
-//                    }
-//                }
-//            }
-//        }
-//        if(height%3 ==1) {
-//            for (int i = 0; i < n-1; i++) {
-//                for (int j = 0; j < n-1 - i; j++) {
-//                    if (objects[j].getYOrig() > objects[j + 1].getYOrig()) {
-//                        // swap
-//                        AirObject temp = objects[j];
-//                        objects[j] = objects[j + 1];
-//                        objects[j + 1] = temp;
-//                    }
-//                }
-//            }
-//        }
-//        if(height%3 ==2) {
-//            for (int i = 0; i < n-1; i++) {
-//                for (int j = 0; j < n-1 - i; j++) {
-//                    if (objects[j].getZOrig() > objects[j + 1].getZOrig()) {
-//                        // swap
-//                        AirObject temp = objects[j];
-//                        objects[j] = objects[j + 1];
-//                        objects[j + 1] = temp;
-//                    }
-//                }
-//            }
-//        }
-        
-        
-        
-        
+// if(height%3 ==0) {
+// for (int i = 0; i < n-1; i++) {
+// for (int j = 0; j < n-1- i; j++) {
+// if (objects[j].getXOrig() > objects[j + 1].getXOrig()) {
+// // swap
+// AirObject temp = objects[j];
+// objects[j] = objects[j + 1];
+// objects[j + 1] = temp;
+// }
+// }
+// }
+// }
+// if(height%3 ==1) {
+// for (int i = 0; i < n-1; i++) {
+// for (int j = 0; j < n-1 - i; j++) {
+// if (objects[j].getYOrig() > objects[j + 1].getYOrig()) {
+// // swap
+// AirObject temp = objects[j];
+// objects[j] = objects[j + 1];
+// objects[j + 1] = temp;
+// }
+// }
+// }
+// }
+// if(height%3 ==2) {
+// for (int i = 0; i < n-1; i++) {
+// for (int j = 0; j < n-1 - i; j++) {
+// if (objects[j].getZOrig() > objects[j + 1].getZOrig()) {
+// // swap
+// AirObject temp = objects[j];
+// objects[j] = objects[j + 1];
+// objects[j + 1] = temp;
+// }
+// }
+// }
+// }
+
     }
 
 
@@ -228,32 +253,43 @@ public class LeafNode
     {
         String output = "";
         BinTree.addCount();
-        output+= "Leaf with " + count + " objects (" + x + ", " + y + ", " + z
+        output += "Leaf with " + count + " objects (" + x + ", " + y + ", " + z
             + ", " + xW + ", " + yW + ", " + zW + ") " + depth + "\r\n";
-        for(AirObject air : objects) {
-            if(air!=null)
-            output+= air.toString();
+        for (AirObject air : objects)
+        {
+            if (air != null)
+                output += air.toString();
         }
         return output;
-        
+
     }
-    
+
+
     /**
      * gets teh count of the leaf node
+     * 
      * @return in representing the number of objects in the node
      */
-    public int getCount() {
+    public int getCount()
+    {
         return count;
     }
+
+
     /**
      * gets tha array of objects
+     * 
      * @return the objects array
      */
-    public AirObject[] getObjects() {
+    public AirObject[] getObjects()
+    {
         return objects;
     }
-    public void insertDirect(AirObject obj) {
-        objects[count++] = obj; 
+
+
+    public void insertDirect(AirObject obj)
+    {
+        addObject(obj);
     }
 
 
@@ -266,22 +302,86 @@ public class LeafNode
         int xW,
         int yW,
         int zW,
-        int depth) {
+        int depth)
+    {
         boolean removed = removeObject(obj);
-        if (!removed) return this;  
-        if (count == 0) return EmptyLeaf.getInstance(); 
-        return this;  
+
+        if (!removed)
+        {
+            return this;
+        }
+
+        sortNode();
+
+        if (count == 0)
+        {
+            return EmptyLeaf.getInstance();
+        }
+        return this;
     }
-    public boolean removeObject(AirObject obj) {
-        for (int i = 0; i < count; i++) {
-            if (objects[i] != null && objects[i]==obj) {
-                // shift down
-                for (int j = i; j < count - 1; j++) objects[j] = objects[j+1];
-                objects[count-1] = null;
+
+
+    public boolean removeObject(AirObject obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+        String target = obj.getName();
+        for (int i = 0; i < count; i++)
+        {
+            AirObject cur = objects[i];
+            if (cur != null && cur.getName().equals(target))
+            {
+                for (int j = i; j < count - 1; j++)
+                {
+                    objects[j] = objects[j + 1];
+                }
+                objects[count - 1] = null;
                 count--;
                 return true;
             }
         }
         return false;
+    }
+
+
+    public void collision(
+        StringBuilder output,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth)
+    {
+        output.append("In leaf node (").append(x).append(", ").append(y)
+            .append(", ").append(z).append(", ").append(xW).append(", ")
+            .append(yW).append(", ").append(zW).append(") ").append(depth)
+            .append("\r\n");
+
+        for (int i = 0; i < count; i++)
+        {
+            AirObject a = objects[i];
+            if (a == null)
+            {
+                continue;
+            }
+            for (int j = i + 1; j < count; j++)
+            {
+                AirObject b = objects[j];
+                if (b == null)
+                {
+                    continue;
+                }
+                if (twoIntersect(a, b))
+                {
+                    output.append("(").append(a.toString().trim())
+                        .append(" and ").append(b.toString().trim())
+                        .append(")\r\n");
+                }
+            }
+        }
     }
 }

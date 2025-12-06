@@ -77,9 +77,9 @@ public class Drone extends AirObject
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-        if (!super.isValid()) {
-            return false;
-        }
+//        if (!super.isValid()) {
+//            return false;
+//        }
         return !(brand==null||numEngines<1);
     }
     /**
@@ -87,9 +87,9 @@ public class Drone extends AirObject
      * @return a string representation of the object
      */
     public String toString() {
-        if (getName()==null) {
-            return null;
-        }
+//        if (getName()==null) {
+//            return null;
+//        }
         return "Drone "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
             " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ brand+" "
             + numEngines+ "\n"; 

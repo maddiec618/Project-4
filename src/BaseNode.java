@@ -91,4 +91,15 @@ public interface BaseNode {
         int yW,
         int zW,
         int depth);
+
+
+    public void collision(
+        StringBuilder collisions,
+        int i,
+        int j,
+        int k,
+        int worldSize,
+        int worldSize2,
+        int worldSize3,
+        int l);
 }

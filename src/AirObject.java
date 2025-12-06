@@ -143,11 +143,8 @@ public class AirObject
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-        if (xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023 || zOrig < 0 || zOrig > 1023
+        return !(xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023 || zOrig < 0 || zOrig > 1023
             ||getXWidth()<1||getXWidth()+xOrig>1025||getYWidth()<1||getYWidth()+yOrig>1025
-            ||getZWidth()<1||getZWidth()+zOrig>1025||name==null) {
-            return false;
-        }
-        return true;
+            ||getZWidth()<1||getZWidth()+zOrig>1025||name==null);
     }
 }

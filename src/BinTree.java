@@ -41,25 +41,33 @@ public static void addCount() {
     
     public void insert(AirObject obj)
     {
-        if(root==null) {
-            System.out.println("re");
-        }
         //count++;
         root = root.insert(obj, 0, 0, 0, worldSize, worldSize, worldSize, 0);
     }
     
     public String printTree()
     {
-        if(root==null) {
-            System.out.println("ldre");
+        c2 = 0;
+
+        if (root instanceof EmptyLeaf) {
+            c2 = 1;
+            return "E (0, 0, 0, " + worldSize + ", " + worldSize + ", " + worldSize + ") 0\r\n"
+                 + "1 Bintree nodes printed\r\n";
         }
-        c2=0;
-        String output = root.print(0, 0, 0, worldSize, worldSize, worldSize, 0); 
-        if(count==0) {
-            output="e 0 0 0 1024 1024 1024 0\n1 bintree nodes printed";
-            return output;
+
+        String output = root.print(0, 0, 0, worldSize, worldSize, worldSize, 0);
+        return output + c2 + " Bintree nodes printed\r\n";
+    }
+    
+    public String collision() {
+        StringBuilder collisions = new StringBuilder();
+        collisions.append("The following collisions exist in the database:\r\n");
+
+        if (root instanceof EmptyLeaf) {
+            return collisions.toString();
         }
-       
-        return output+c2 + " BinTree nodes printed\r\n";
+
+        root.collision(collisions, 0, 0, 0, worldSize, worldSize, worldSize, 0);
+        return collisions.toString();
     }
 }

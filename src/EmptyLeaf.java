@@ -82,4 +82,17 @@ public class EmptyLeaf
         // TODO Auto-generated method stub
         return this;
     }
+    
+    public void collision(
+        StringBuilder output,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth)
+    {
+        // no objects, no collisions, no header needed
+    }
 }

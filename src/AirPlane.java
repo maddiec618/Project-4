@@ -105,9 +105,6 @@ public class AirPlane
      * @return a string representation of the object
      */
     public String toString() {
-        if (getName()==null) {
-            return null;
-        }
         return "Airplane "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
             " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ carrier+" "+flightNum
             +" "+ numEngines+ "\n"; 

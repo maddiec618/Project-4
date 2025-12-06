@@ -79,9 +79,9 @@ public class Bird
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-        if (!super.isValid()) {
-            return false;
-        }
+//        if (!super.isValid()) {
+//            return false;
+//        }
         return !(type==null||number<1);
     }
     /**
@@ -89,9 +89,6 @@ public class Bird
      * @return a string representation of the object
      */
     public String toString() {
-        if (getName()==null) {
-            return null;
-        }
         return "Bird "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
             " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+number
            + "\n"; 

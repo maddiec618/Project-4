@@ -89,9 +89,6 @@ public class Balloon
      * @return a string representation of the object
      */
     public String toString() {
-        if (getName()==null) {
-            return null;
-        }
         return "Balloon "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
             " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+ascentRate
             + "\n"; 

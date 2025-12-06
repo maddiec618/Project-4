@@ -9,11 +9,13 @@ import java.util.Random;
 public class WorldDB implements ATC {
     private final int worldSize = 1024;
     private Random rnd;
-    /*
+     /*
      * should have an empty skip list
      */
     private SkipList<String, AirObject> skip;
     private BinTree bin;
+    private AirObject[] objects;
+    private int objCount;
 
     /**
      * Create a brave new World.
@@ -24,10 +26,12 @@ public class WorldDB implements ATC {
     public WorldDB(Random r) {
         bin = new BinTree(worldSize);
         rnd = r;
-        if (rnd == null) {
-            rnd = new Random();
-        }
+//        if (rnd == null) {
+//            rnd = new Random();
+//        }
         skip = new SkipList<String, AirObject>(r);
+        objects = new AirObject[128];
+        objCount = 0;
         clear();
     }
 
@@ -38,6 +42,10 @@ public class WorldDB implements ATC {
     public void clear() {
         skip = new SkipList<String, AirObject>(rnd);
         bin.clear();
+        objCount = 0;
+        for (int i = 0; i < objects.length; i++) {
+            objects[i] = null;
+        }
     }
 
 
@@ -50,21 +58,20 @@ public class WorldDB implements ATC {
      * @return True iff the AirObject is successfully entered into the database
      */
     public boolean add(AirObject a) {
-        /*
-         * if allowed
-         * call add
-         */
         if (!a.isValid()) {
             return false;
         }
 
-        boolean insert = skip.insert(a.getName(), a);
-
-        if (insert) {
-            bin.insert(a);
+        if (skip.find(a.getName()) != null) {
+            return false;
         }
 
-        return insert;
+        skip.insert(a.getName(), a);
+        bin.insert(a);
+        
+        objects[objCount++] = a;
+        
+        return true;
     }
 
 
@@ -79,13 +86,24 @@ public class WorldDB implements ATC {
      * @return A string representing the AirObject, or null if no such name.
      */
     public String delete(String name) {
-        if (name == null) {
-            return null;
-        }
         AirObject value = skip.deleteKey(name);
         if (value == null)
             return null;
         bin.delete(value);
+        
+        for (int i = 0; i < objCount; i++) {
+            if (objects[i] != null
+                && objects[i].getName().equals(value.getName())) {
+                // shift tail left
+                for (int j = i; j < objCount - 1; j++) {
+                    objects[j] = objects[j + 1];
+                }
+                objects[objCount - 1] = null;
+                objCount--;
+                break;
+            }
+        }
+        
         return value.toString();
     }
 
@@ -142,10 +160,33 @@ public class WorldDB implements ATC {
      *         the parameters are bad
      */
     public String rangeprint(String start, String end) {
-        if (end == null || start == null) {
+        if (start == null || end == null) {
             return null;
         }
-        return "Found these records in the range begin to end\n";
+        if (start.compareTo(end) > 0) {
+            return null;
+        }
+
+        String objectsInRange = "Found these records in the range " + start + " to " + end + "\r\n";
+
+        AirObject[] matches = new AirObject[objCount];
+        int m = 0;
+        for (int i = 0; i < objCount; i++) {
+            AirObject a = objects[i];
+            if (a == null) {
+                continue;
+            }
+            String nm = a.getName();
+            if (nm.compareTo(start) >= 0 && nm.compareTo(end) <= 0) {
+                matches[m++] = a;
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            objectsInRange += matches[i].toString();
+        }
+
+        return objectsInRange;
     }
 
 
@@ -159,7 +200,7 @@ public class WorldDB implements ATC {
      * @return String listing the AirObjects that participate in collisions.
      */
     public String collisions() {
-        return "The following collisions exist in the database:\n";
+        return bin.collision();
     }
 
 

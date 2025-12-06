@@ -90,9 +90,9 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
     /** Insert a key, element pair into the skip list */
     @SuppressWarnings("unchecked")
     public boolean insert(K key, V value) {
-        if(!(find(key)==null)){
-            return false;
-        }
+//        if(!(find(key)==null)){
+//            return false;
+//        }
 
         int newLevel = randomLevel();
 // System.out.println("Key "+key+"\n value "+value.toString());
@@ -113,9 +113,9 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
             update[i] = x;
         }
         x = x.forward[0];
-        if (x != null && x.key.compareTo(key) == 0) {
-            return false;
-        }
+//        if (x != null && x.key.compareTo(key) == 0) {
+//            return false;
+//        }
         x = new SkipNode<>(key, value, newLevel);
         for (int i = 0; i <= newLevel; i++) { // Splice into list
             x.forward[i] = update[i].forward[i]; // Who x points to
@@ -151,16 +151,6 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
 
 
     /**
-     * method to get the size of the skiplist
-     * 
-     * @return int representing size of skip list
-     */
-    public int getSize() {
-        return size;
-    }
-
-
-    /**
      * method deleting a value from the skiplist
      * 
      * @param key
@@ -169,9 +159,11 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
      */
     @SuppressWarnings("unchecked")
     public V deleteKey(K key) {
+        if (key == null || size == 0) {
+            return null;
+        }
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
-        // going through to find where key would be
         for (int i = level; i >= 0; i--) {
             while (x.forward[i] != null && (x.forward[i].key.compareTo(
                 key) < 0)) {
@@ -180,22 +172,22 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
             update[i] = x;
         }
         x = x.forward[0];
-        if (x != null && x.key.compareTo(key) == 0) {
-            for (int i = 0; i <= level; i++) {
-                if (update[i].forward[i] != x)
-                    break;
-                update[i].forward[i] = x.forward[i];
-            }
-//            while (level > 0 && head.forward[level] == null) {
-//                level--;
-//            }
-            size--;
-            return x.value;
+        if (x == null || x.key == null || x.key.compareTo(key) != 0) {
+            return null;
         }
-//        if(size==0) {
-//            count ++;
-//        }
-        return null;
+
+        for (int i = 0; i <= level; i++) {
+            if (update[i] == null) {
+                continue;
+            }
+            if (update[i].forward[i] != x) {
+                break;
+            }
+            update[i].forward[i] = x.forward[i];
+        }
+
+        size--;
+        return x.value;
     }
 
 
