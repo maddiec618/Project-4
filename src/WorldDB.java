@@ -173,11 +173,8 @@ public class WorldDB implements ATC {
         int m = 0;
         for (int i = 0; i < objCount; i++) {
             AirObject a = objects[i];
-            if (a == null) {
-                continue;
-            }
-            String nm = a.getName();
-            if (nm.compareTo(start) >= 0 && nm.compareTo(end) <= 0) {
+            String name = a.getName();
+            if (name.compareTo(start) >= 0 && name.compareTo(end) <= 0) {
                 matches[m++] = a;
             }
         }
@@ -228,11 +225,10 @@ public class WorldDB implements ATC {
      */
     public String intersect(int x, int y, int z, int xwid, int ywid, int zwid) {
         if (x < 0 || y < 0 || z < 0 || xwid < 0 || ywid < 0 || zwid < 0
-            || x > 1023 || y > 1023 || z > 1023 || xwid + x > 1023 || zwid
-                + z > 1023 || ywid + y > 1023) {
+            || x > 1024 || y > 1024 || z > 1024 || xwid + x > 1024 || zwid
+                + z > 1024 || ywid + y > 1024) {
             return null;
         }
-        return "The following objects intersect (1, 1, 1, 1, 1, 1)\n"
-            + "1 nodes were visited in the bintree\n";
+        return bin.intersect(x, y, z, xwid, ywid, zwid);
     }
 }

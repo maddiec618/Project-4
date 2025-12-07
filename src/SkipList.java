@@ -69,7 +69,6 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
         for (lev = 0; Math.abs(ran.nextInt()) % 2 == 0; lev++) {
 //            System.out.println("he"+lev);
             // if (lev >= 16) break;
-            ;
         }
         return lev;
     }

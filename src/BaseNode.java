@@ -102,4 +102,11 @@ public interface BaseNode {
         int worldSize2,
         int worldSize3,
         int l);
+    
+    void intersect(
+        StringBuilder out,
+        int nodeX, int nodeY, int nodeZ,
+        int nodeXW, int nodeYW, int nodeZW,
+        int qx, int qy, int qz, int qxW, int qyW, int qzW,
+        int depth);
 }

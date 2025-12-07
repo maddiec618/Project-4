@@ -136,7 +136,7 @@ public class LeafNode
             sortNode();
             return this;
         }
-        // System.out.println("split" + obj.toString());
+
         AirObject[] temp = new AirObject[count + 1];
         for (int i = 0; i < count; i++)
         {
@@ -181,54 +181,14 @@ public class LeafNode
             {
                 if (objects[j].compareTo(objects[j + 1]) > 0)
                 {
-                    // swap
                     AirObject temp = objects[j];
                     objects[j] = objects[j + 1];
                     objects[j + 1] = temp;
                 }
             }
         }
-// if(height%3 ==0) {
-// for (int i = 0; i < n-1; i++) {
-// for (int j = 0; j < n-1- i; j++) {
-// if (objects[j].getXOrig() > objects[j + 1].getXOrig()) {
-// // swap
-// AirObject temp = objects[j];
-// objects[j] = objects[j + 1];
-// objects[j + 1] = temp;
-// }
-// }
-// }
-// }
-// if(height%3 ==1) {
-// for (int i = 0; i < n-1; i++) {
-// for (int j = 0; j < n-1 - i; j++) {
-// if (objects[j].getYOrig() > objects[j + 1].getYOrig()) {
-// // swap
-// AirObject temp = objects[j];
-// objects[j] = objects[j + 1];
-// objects[j + 1] = temp;
-// }
-// }
-// }
-// }
-// if(height%3 ==2) {
-// for (int i = 0; i < n-1; i++) {
-// for (int j = 0; j < n-1 - i; j++) {
-// if (objects[j].getZOrig() > objects[j + 1].getZOrig()) {
-// // swap
-// AirObject temp = objects[j];
-// objects[j] = objects[j + 1];
-// objects[j + 1] = temp;
-// }
-// }
-// }
-// }
-
     }
 
-
-    // ----------------------------------------------------------
     /**
      * Prints node.
      * 
@@ -290,6 +250,7 @@ public class LeafNode
     public void insertDirect(AirObject obj)
     {
         addObject(obj);
+        sortNode();
     }
 
 
@@ -364,17 +325,9 @@ public class LeafNode
         for (int i = 0; i < count; i++)
         {
             AirObject a = objects[i];
-            if (a == null)
-            {
-                continue;
-            }
             for (int j = i + 1; j < count; j++)
             {
                 AirObject b = objects[j];
-                if (b == null)
-                {
-                    continue;
-                }
                 if (twoIntersect(a, b))
                 {
                     output.append("(").append(a.toString().trim())
@@ -383,5 +336,63 @@ public class LeafNode
                 }
             }
         }
+    }
+    
+    @Override
+    public void intersect(
+        StringBuilder output,
+        int nodeX, int nodeY, int nodeZ,
+        int nodeXW, int nodeYW, int nodeZW,
+        int qx, int qy, int qz, int qxW, int qyW, int qzW,
+        int depth)
+    {
+        BinTree.count++;
+
+        output.append("in leaf node ")
+              .append(nodeX).append(" ")
+              .append(nodeY).append(" ")
+              .append(nodeZ).append(" ")
+              .append(nodeXW).append(" ")
+              .append(nodeYW).append(" ")
+              .append(nodeZW).append(" ")
+              .append(depth).append("\r\n");
+
+        for (int i = 0; i < count; i++) {
+            AirObject obj = objects[i];
+
+            if (!boxesIntersect(
+                    obj.getXOrig(), obj.getYOrig(), obj.getZOrig(),
+                    obj.getXWidth(), obj.getYWidth(), obj.getZWidth(),
+                    qx, qy, qz, qxW, qyW, qzW)) {
+                continue;
+            }
+
+            int ix = Math.max(obj.getXOrig(), qx);
+            int iy = Math.max(obj.getYOrig(), qy);
+            int iz = Math.max(obj.getZOrig(), qz);
+
+            if (ix >= nodeX && ix < nodeX + nodeXW &&
+                iy >= nodeY && iy < nodeY + nodeYW &&
+                iz >= nodeZ && iz < nodeZ + nodeZW) {
+                output.append(obj.toString());
+            }
+        }
+    }
+    
+    private boolean boxesIntersect(
+        int ax, int ay, int az, int axW, int ayW, int azW,
+        int bx, int by, int bz, int bxW, int byW, int bzW)
+    {
+        int ax2 = ax + axW;
+        int ay2 = ay + ayW;
+        int az2 = az + azW;
+
+        int bx2 = bx + bxW;
+        int by2 = by + byW;
+        int bz2 = bz + bzW;
+
+        return (ax < bx2 && bx < ax2)
+            && (ay < by2 && by < ay2)
+            && (az < bz2 && bz < az2);
     }
 }

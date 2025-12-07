@@ -99,19 +99,19 @@ public class AirControlTest extends TestCase {
              + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n",
              w.collisions());
             
-//             assertFuzzyEquals(
-//             "The following objects intersect (0 0 0 1024 1024 1024):\r\n"
-//             + "In Internal node (0, 0, 0, 1024, 1024, 1024) 0\r\n"
-//             + "In Internal node (0, 0, 0, 512, 1024, 1024) 1\r\n"
-//             + "In leaf node (0, 0, 0, 512, 512, 1024) 2\r\n"
-//             + "Airplane Air1 0 10 1 20 2 30 USAir 717 4\r\n"
-//             + "Balloon B1 10 11 11 21 12 31 hot_air 15\r\n"
-//             + "Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1\r\n"
-//             + "In leaf node (0, 512, 0, 512, 512, 1024) 2\r\n"
-//             + "Drone Air2 100 1010 101 924 2 900 Droners 3\r\n"
-//             + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n"
-//             + "5 nodes were visited in the bintree\r\n",
-//             w.intersect(0, 0, 0, 1024, 1024, 1024));
+             assertFuzzyEquals(
+             "The following objects intersect (0 0 0 1024 1024 1024):\r\n"
+             + "In Internal node (0, 0, 0, 1024, 1024, 1024) 0\r\n"
+             + "In Internal node (0, 0, 0, 512, 1024, 1024) 1\r\n"
+             + "In leaf node (0, 0, 0, 512, 512, 1024) 2\r\n"
+             + "Airplane Air1 0 10 1 20 2 30 USAir 717 4\r\n"
+             + "Balloon B1 10 11 11 21 12 31 hot_air 15\r\n"
+             + "Bird pterodactyl 0 100 20 10 50 50 Dinosaur 1\r\n"
+             + "In leaf node (0, 512, 0, 512, 512, 1024) 2\r\n"
+             + "Drone Air2 100 1010 101 924 2 900 Droners 3\r\n"
+             + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n"
+             + "5 nodes were visited in the bintree\r\n",
+             w.intersect(0, 0, 0, 1024, 1024, 1024));
     }
 
 
@@ -787,8 +787,8 @@ public class AirControlTest extends TestCase {
         rnd.setSeed(0xCAFEBEEF);
         WorldDB w = new WorldDB(rnd);
             
-             assertFuzzyEquals(
-             "The following collisions exist in the database:\r\n", w.collisions());
+         assertFuzzyEquals(
+         "The following collisions exist in the database:\r\n", w.collisions());
     }
     
     public void testCollisionsDelete() throws Exception {
@@ -811,6 +811,12 @@ public class AirControlTest extends TestCase {
         
         assertFuzzyEquals(
             "The following collisions exist in the database:\r\n"
+            + "in leaf node 0 0 0 64 64 128 11\r\n"
+            + "airplane air1 0 10 1 20 2 30 usair 717 4 and balloon b1 10 11 11 21 12 31 hot_air 15\r\n"
+            + "in leaf node 0 64 0 64 64 128 11\r\n"
+            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 100 20 10 50 50 dinosaur 1\r\n"
+            + "in leaf node 0 128 0 128 128 256 8\r\n"
+            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 100 20 10 50 50 dinosaur 1\r\n"
             + "In leaf node (0, 512, 0, 512, 512, 1024) 2\r\n"
             + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n",
             w.collisions());
@@ -828,5 +834,31 @@ public class AirControlTest extends TestCase {
          + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n",
          w.collisions());
     }
+    
+    public void testIntersectsEmpty() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+            
+        assertFuzzyEquals(
+        "The following objects intersect (0 0 0 1024 1024 1024):\r\n" 
+        + "1 nodes were visited in the bintree\r\n", 
+        w.intersect(0, 0, 0, 1024, 1024, 1024));
+    }
+    
+    public void testLeafStaysLeafWhenAllIntersect() {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
 
+        w.add(new Balloon("B1", 10, 10, 10, 20, 20, 20, "air", 5));
+        w.add(new Balloon("B2", 12, 12, 12, 18, 18, 18, "air", 5));
+        w.add(new Balloon("B3", 15, 15, 15, 10, 10, 10, "air", 5));
+        w.add(new Balloon("B4", 16, 16, 16, 10, 10, 10, "air", 5));
+
+        String out = w.printbintree();
+
+        assertTrue(out.contains("Leaf with 4 objects"));
+        assertFalse(out.contains("I ("));
+    }
 }

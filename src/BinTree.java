@@ -70,4 +70,23 @@ public static void addCount() {
         root.collision(collisions, 0, 0, 0, worldSize, worldSize, worldSize, 0);
         return collisions.toString();
     }
+    
+    public String intersect(int x, int y, int z, int xW, int yW, int zW) {
+        StringBuilder out = new StringBuilder();
+        out.append("The following objects intersect (")
+           .append(x).append(", ").append(y).append(", ").append(z)
+           .append(", ").append(xW).append(", ").append(yW).append(", ").append(zW)
+           .append(")\r\n");
+
+        count = 0;
+
+        root.intersect(out,
+                       0, 0, 0,            
+                       worldSize, worldSize, worldSize,  
+                       x, y, z, xW, yW, zW,  
+                       0);                   
+
+        out.append(count).append(" nodes were visited in the bintree\r\n");
+        return out.toString();
+    }
 }
