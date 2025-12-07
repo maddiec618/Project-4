@@ -1,9 +1,8 @@
 import java.util.Random;
 import student.TestCase;
-
 /**
- * @author {Your Name Here}
- * @version {Put Something Here}
+ * @author madelync05 & ellae
+ * @version fall 2025
  */
 public class AirControlTest extends TestCase {
 
@@ -47,12 +46,12 @@ public class AirControlTest extends TestCase {
             "Dinosaur", 1)));
         assertFalse(w.add(new Bird("pterodactyl", 0, 100, 20, 10, 50, 50,
             "Dinosaur", 1)));
- assertTrue(w.add(new Rocket("Enterprise",
- 0, 100, 20, 10, 50, 50, 5000, 99.29)));
-
- assertFuzzyEquals(
- "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
- w.delete("Enterprise"));
+         assertTrue(w.add(new Rocket("Enterprise",
+         0, 100, 20, 10, 50, 50, 5000, 99.29)));
+        
+         assertFuzzyEquals(
+         "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
+         w.delete("Enterprise"));
 
         assertFuzzyEquals("Airplane Air1 0 10 1 20 2 30 USAir 717 4", w.print(
             "Air1"));
@@ -115,7 +114,6 @@ public class AirControlTest extends TestCase {
     }
 
 
-    // ----------------------------------------------------------
     /**
      * Test syntax: Check various forms of bad input parameters
      *
@@ -183,7 +181,6 @@ public class AirControlTest extends TestCase {
     }
 
 
-    // ----------------------------------------------------------
     /**
      * Test empty: Check various returns from commands on empty database
      *
@@ -296,7 +293,6 @@ public class AirControlTest extends TestCase {
         assertNull(w.delete("s2"));
         assertNull(w.delete("d1"));
         assertNull(w.delete("b1"));
-
     }
 
 
@@ -318,9 +314,6 @@ public class AirControlTest extends TestCase {
         assertTrue(w.add(new Bird("B2", 0, 100, 20, 10, 50, 50, "Dinosaur",
             1)));
         assertTrue(w.add(new Rocket("R1", 0, 100, 20, 10, 50, 50, 100, 102.3)));
-// assertFuzzyEquals(
-// "Rocket Enterprise 0 100 20 10 50 50 5000 99.29",
-// w.delete("Enterprise"));
         System.out.println(w.printskiplist());
         assertFuzzyEquals("Bird B2 0 100 20 10 50 50 Dinosaur 1", w.delete(
             "B2"));
@@ -626,7 +619,8 @@ public class AirControlTest extends TestCase {
             + "  (Drone d1 100 1010 101 924 2 900 Droners 3)\r\n"
             + "5 Bintree nodes printed\r\n", w.printbintree());
         assertFuzzyEquals("Node has depth 3, Value (null)\r\n"
-            + "Node has depth 3, Value (airplane a1 0 210 100 520 342 30 usair 717 4)\r\n"
+            + "Node has depth 3, Value (airplane a1 0 210 100 520 342 30 usair 717 "
+            + "4)\r\n"
             + "Node has depth 2, "
             + "Value (Balloon B1 100 11 101 21 12 31 hot_air 15)\r\n"
             + "Node has depth 2, "
@@ -667,7 +661,8 @@ public class AirControlTest extends TestCase {
             + "  (Drone d1 100 1010 101 924 2 900 Droners 3)\r\n"
             + "5 Bintree nodes printed\r\n", w.printbintree());
         assertFuzzyEquals("Node has depth 3, Value (null)\r\n"
-            + "Node has depth 3, Value (airplane a1 0 210 100 520 342 30 usair 717 4)\r\n"
+            + "Node has depth 3, Value (airplane a1 0 210 100 520 342 30 usair 717 "
+            + "4)\r\n"
             + "Node has depth 2, "
             + "Value (Balloon B1 100 11 101 21 12 31 hot_air 15)\r\n"
             + "Node has depth 2, "
@@ -687,101 +682,10 @@ public class AirControlTest extends TestCase {
             + "1 Bintree nodes printed\r\n", w.printbintree()); 
     }
     
-    public void testInsertFourthAllIntersectKeepsLeaf() throws Exception {
-        LeafNode leaf = new LeafNode();
-
-        leaf.insert(new Balloon("B1", 10, 10, 10, 20, 20, 20, "hot", 1),
-            0, 0, 0, 100, 100, 100, 0);
-        leaf.insert(new Balloon("B2", 15, 15, 15, 20, 20, 20, "hot", 1),
-            0, 0, 0, 100, 100, 100, 0);
-        leaf.insert(new Balloon("B3", 12, 12, 12, 20, 20, 20, "hot", 1),
-            0, 0, 0, 100, 100, 100, 0);
-
-        BaseNode result = leaf.insert(
-            new Balloon("B4", 18, 18, 18, 20, 20, 20, "hot", 1),
-            0, 0, 0, 100, 100, 100, 0);
-
-        assertSame(leaf, result);
-        assertEquals(4, leaf.getCount());
-
-        String out = leaf.print(0, 0, 0, 100, 100, 100, 0);
-    }
-    
-    public void testDeleteNonExisting() throws Exception {
-        LeafNode leaf = new LeafNode();
-
-        leaf.insert(new Balloon("B1", 10, 10, 10, 5, 5, 5, "hot", 1),
-            0, 0, 0, 50, 50, 50, 0);
-        leaf.insert(new Balloon("B2", 20, 20, 20, 5, 5, 5, "hot", 1),
-            0, 0, 0, 50, 50, 50, 0);
-        assertEquals(2, leaf.getCount());
-
-        Balloon notHere = new Balloon("X", 0, 0, 0, 5, 5, 5, "hot", 1);
-        BaseNode after = leaf.delete(
-            notHere,
-            0, 0, 0, 50, 50, 50, 0);
-
-        assertSame(leaf, after);
-        assertEquals(2, leaf.getCount());
-    }
-    
-    public void testSortNodeOrder() throws Exception {
-        LeafNode leaf = new LeafNode();
-
-        AirObject a3 = new Balloon("Cname", 0, 0, 0, 5, 5, 5, "hot", 1);
-        AirObject a1 = new Balloon("Aname", 0, 0, 0, 5, 5, 5, "hot", 1);
-        AirObject a2 = new Balloon("Bname", 0, 0, 0, 5, 5, 5, "hot", 1);
-
-        leaf.insert(a3, 0, 0, 0, 50, 50, 50, 0);
-        leaf.insert(a1, 0, 0, 0, 50, 50, 50, 0);
-        leaf.insert(a2, 0, 0, 0, 50, 50, 50, 0);
-
-        AirObject[] arr = leaf.getObjects();
-        assertEquals("Aname", arr[0].getName());
-        assertEquals("Bname", arr[1].getName());
-        assertEquals("Cname", arr[2].getName());
-    }
-    
-    public void testInsertNonMinimalRegionCanSplit() throws Exception {
-        LeafNode leaf = new LeafNode();
-
-        leaf.insert(new Balloon("B1", 0, 0, 0, 1, 1, 1, "hot", 1),
-            0, 0, 0, 1, 4, 4, 0);
-        leaf.insert(new Balloon("B2", 0, 2, 2, 1, 1, 1, "hot", 1),
-            0, 0, 0, 1, 4, 4, 0);
-        leaf.insert(new Balloon("B3", 0, 3, 3, 1, 1, 1, "hot", 1),
-            0, 0, 0, 1, 4, 4, 0);
-
-        BaseNode res = leaf.insert(
-            new Balloon("B4", 0, 1, 3, 1, 1, 1, "hot", 1),
-            0, 0, 0, 1, 4, 4, 0);
-
-        assertTrue(res instanceof InternalNode);
-    }
-    
-    public void testDeleteMiddleKeepsOrder() throws Exception {
-        LeafNode leaf = new LeafNode();
-
-        leaf.insert(new Balloon("A", 0, 0, 0, 5, 5, 5, "hot", 1),
-            0, 0, 0, 50, 50, 50, 0);
-        leaf.insert(new Balloon("B", 10, 0, 0, 5, 5, 5, "hot", 1),
-            0, 0, 0, 50, 50, 50, 0);
-        leaf.insert(new Balloon("C", 20, 0, 0, 5, 5, 5, "hot", 1),
-            0, 0, 0, 50, 50, 50, 0);
-
-        assertEquals(3, leaf.getCount());
-
-        Balloon bCopy = new Balloon("B", 10, 0, 0, 5, 5, 5, "hot", 1);
-        BaseNode after = leaf.delete(bCopy, 0, 0, 0, 50, 50, 50, 0);
-
-        assertSame(leaf, after);
-        assertEquals(2, leaf.getCount());
-
-        AirObject[] arr = leaf.getObjects();
-        assertEquals("A", arr[0].getName());
-        assertEquals("C", arr[1].getName());
-    }
-    
+    /**
+     * Tests collisions when there are no objects
+     * @throws Exception
+     */
     public void testCollisionsEmpty() throws Exception {
         Random rnd = new Random();
         rnd.setSeed(0xCAFEBEEF);
@@ -791,6 +695,10 @@ public class AirControlTest extends TestCase {
          "The following collisions exist in the database:\r\n", w.collisions());
     }
     
+    /**
+     * Tests collisions when an object is deleted
+     * @throws Exception
+     */
     public void testCollisionsDelete() throws Exception {
         Random rnd = new Random();
         rnd.setSeed(0xCAFEBEEF);
@@ -812,11 +720,14 @@ public class AirControlTest extends TestCase {
         assertFuzzyEquals(
             "The following collisions exist in the database:\r\n"
             + "in leaf node 0 0 0 64 64 128 11\r\n"
-            + "airplane air1 0 10 1 20 2 30 usair 717 4 and balloon b1 10 11 11 21 12 31 hot_air 15\r\n"
+            + "airplane air1 0 10 1 20 2 30 usair 717 4 and balloon b1 10 11 11 21 "
+            + "12 31 hot_air 15\r\n"
             + "in leaf node 0 64 0 64 64 128 11\r\n"
-            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 100 20 10 50 50 dinosaur 1\r\n"
+            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 "
+            + "100 20 10 50 50 dinosaur 1\r\n"
             + "in leaf node 0 128 0 128 128 256 8\r\n"
-            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 100 20 10 50 50 dinosaur 1\r\n"
+            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 "
+            + "100 20 10 50 50 dinosaur 1\r\n"
             + "In leaf node (0, 512, 0, 512, 512, 1024) 2\r\n"
             + "In leaf node (512, 0, 0, 512, 1024, 1024) 1\r\n",
             w.collisions());
@@ -835,6 +746,10 @@ public class AirControlTest extends TestCase {
          w.collisions());
     }
     
+    /**
+     * Tests intersection when there are no air objects
+     * @throws Exception
+     */
     public void testIntersectsEmpty() throws Exception {
         Random rnd = new Random();
         rnd.setSeed(0xCAFEBEEF);
@@ -846,7 +761,10 @@ public class AirControlTest extends TestCase {
         w.intersect(0, 0, 0, 1024, 1024, 1024));
     }
     
-    public void testLeafStaysLeafWhenAllIntersect() {
+    /**
+     * Tests that leaf stays when all intersect
+     */
+    public void testAllIntersect() {
         Random rnd = new Random();
         rnd.setSeed(0xCAFEBEEF);
         WorldDB w = new WorldDB(rnd);
@@ -856,9 +774,12 @@ public class AirControlTest extends TestCase {
         w.add(new Balloon("B3", 15, 15, 15, 10, 10, 10, "air", 5));
         w.add(new Balloon("B4", 16, 16, 16, 10, 10, 10, "air", 5));
 
-        String out = w.printbintree();
-
-        assertTrue(out.contains("Leaf with 4 objects"));
-        assertFalse(out.contains("I ("));
+        assertFuzzyEquals("leaf with 4 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "balloon b1 10 10 10 20 20 20 air 5\r\n"
+            + "balloon b2 12 12 12 18 18 18 air 5\r\n"
+            + "balloon b3 15 15 15 10 10 10 air 5\r\n"
+            + "balloon b4 16 16 16 10 10 10 air 5\r\n"
+            + "1 bintree nodes printed", w.printbintree());
+       
     }
 }

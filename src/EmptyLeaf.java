@@ -17,7 +17,6 @@ public class EmptyLeaf
     {
     }
 
-
     public static EmptyLeaf getInstance()
     {
         return INSTANCE;

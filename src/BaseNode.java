@@ -4,7 +4,8 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public interface BaseNode {
+public interface BaseNode
+{
     // ----------------------------------------------------------
     /**
      * Inserts a new node object into the subtree.
@@ -62,7 +63,7 @@ public interface BaseNode {
 
 
     /**
-     * deletes a node object from the subtree.
+     * Deletes a node object from the subtree.
      * 
      * @param obj
      *            Object being inserted
@@ -93,6 +94,18 @@ public interface BaseNode {
         int depth);
 
 
+    /**
+     * Checks for all collisions between AirObjects bounding boxes
+     * 
+     * @param collisions
+     * @param i
+     * @param j
+     * @param k
+     * @param worldSize
+     * @param worldSize2
+     * @param worldSize3
+     * @param l
+     */
     public void collision(
         StringBuilder collisions,
         int i,
@@ -102,11 +115,40 @@ public interface BaseNode {
         int worldSize2,
         int worldSize3,
         int l);
-    
+
+
+    /**
+     * Checks for AirObjects whose bounding boxes that intersect the given
+     * bounding box
+     * 
+     * @param output
+     * @param nodeX
+     * @param nodeY
+     * @param nodeZ
+     * @param nodeXW
+     * @param nodeYW
+     * @param nodeZW
+     * @param qx
+     * @param qy
+     * @param qz
+     * @param qxW
+     * @param qyW
+     * @param qzW
+     * @param depth
+     */
     void intersect(
-        StringBuilder out,
-        int nodeX, int nodeY, int nodeZ,
-        int nodeXW, int nodeYW, int nodeZW,
-        int qx, int qy, int qz, int qxW, int qyW, int qzW,
+        StringBuilder output,
+        int nodeX,
+        int nodeY,
+        int nodeZ,
+        int nodeXW,
+        int nodeYW,
+        int nodeZW,
+        int qx,
+        int qy,
+        int qz,
+        int qxW,
+        int qyW,
+        int qzW,
         int depth);
 }

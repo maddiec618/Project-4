@@ -2,15 +2,25 @@ public class InternalNode
     implements BaseNode
 {
     // ~ Fields ................................................................
-    // private BaseNode[] children = new BaseNode[8];
     private BaseNode left;
     private BaseNode right;
+    /**
+     * First count
+     */
     public static int count;
+    /**
+     * Second count
+     */
     public static int count2;
 
     private int height;
     private int discriminator;
 
+    // ----------------------------------------------------------
+    /**
+     * Create a new InternalNode object.
+     * @param h
+     */
     // ~ Constructors ..........................................................
     public InternalNode(int h)
     {
@@ -291,7 +301,128 @@ public class InternalNode
         return this;
     }
 
+    @Override
+    public void collision(
+        StringBuilder output,
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth)
+    {
+        if (discriminator == 0) {
+            int leftXW  = xW / 2;
+            int rightXW = xW - leftXW;
 
+            left.collision(output, x, y, z, leftXW, yW, zW, depth + 1);
+            right.collision(output, x + leftXW, y, z, rightXW, yW, zW, depth + 1);
+        }
+        else if (discriminator == 1) {
+            int leftYW  = yW / 2;
+            int rightYW = yW - leftYW;
+
+            left.collision(output, x, y, z, xW, leftYW, zW, depth + 1);
+            right.collision(output, x, y + leftYW, z, xW, rightYW, zW, depth + 1);
+        }
+        else { 
+            int leftZW  = zW / 2;
+            int rightZW = zW - leftZW;
+
+            left.collision(output, x, y, z, xW, yW, leftZW,  depth + 1);
+            right.collision(output, x, y, z + leftZW, xW, yW, rightZW, depth + 1);
+        }
+    }
+    
+    @Override
+    public void intersect(
+        StringBuilder output,
+        int nodeX, int nodeY, int nodeZ,
+        int nodeXW, int nodeYW, int nodeZW,
+        int qx, int qy, int qz, int qxW, int qyW, int qzW,
+        int depth)
+    {
+        if (!boxesIntersect(nodeX, nodeY, nodeZ, nodeXW, nodeYW, nodeZW,
+                            qx, qy, qz, qxW, qyW, qzW)) {
+            return;
+        }
+
+        BinTree.count++;
+
+        output.append("in internal node ")
+              .append(nodeX).append(" ")
+              .append(nodeY).append(" ")
+              .append(nodeZ).append(" ")
+              .append(nodeXW).append(" ")
+              .append(nodeYW).append(" ")
+              .append(nodeZW).append(" ")
+              .append(depth).append("\r\n");
+
+        if (discriminator == 0) {
+            int leftXW  = nodeXW / 2;
+            int rightXW = nodeXW - leftXW;
+
+            int leftX   = nodeX;
+            int rightX  = nodeX + leftXW;
+            int childY  = nodeY;
+            int childZ  = nodeZ;
+            int childYW = nodeYW;
+            int childZW = nodeZW;
+
+            if (leftXW > 0 &&
+                boxesIntersect(leftX, childY, childZ, leftXW, childYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW)) {
+                left.intersect(output,
+                               leftX, childY, childZ,
+                               leftXW, childYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW,
+                               depth + 1);
+            }
+
+            if (rightXW > 0 &&
+                boxesIntersect(rightX, childY, childZ, rightXW, childYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW)) {
+                right.intersect(output,
+                                rightX, childY, childZ,
+                                rightXW, childYW, childZW,
+                                qx, qy, qz, qxW, qyW, qzW,
+                                depth + 1);
+            }
+        }
+        else if (discriminator == 1) {
+            int leftYW  = nodeYW / 2;
+            int rightYW = nodeYW - leftYW;
+
+            int leftY   = nodeY;
+            int rightY  = nodeY + leftYW;
+            int childX  = nodeX;
+            int childZ  = nodeZ;
+            int childXW = nodeXW;
+            int childZW = nodeZW;
+
+            if (leftYW > 0 &&
+                boxesIntersect(childX, leftY, childZ, childXW, leftYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW)) {
+                left.intersect(output,
+                               childX, leftY, childZ,
+                               childXW, leftYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW,
+                               depth + 1);
+            }
+
+            if (rightYW > 0 &&
+                boxesIntersect(childX, rightY, childZ, childXW, rightYW, childZW,
+                               qx, qy, qz, qxW, qyW, qzW)) {
+                right.intersect(output,
+                                childX, rightY, childZ,
+                                childXW, rightYW, childZW,
+                                qx, qy, qz, qxW, qyW, qzW,
+                                depth + 1);
+            }
+        }
+    }
+    
     private LeafNode copyLeaf(LeafNode src)
     {
         LeafNode copy = new LeafNode();
@@ -405,40 +536,6 @@ public class InternalNode
         }
         return false;
     }
-
-    @Override
-    public void collision(
-        StringBuilder output,
-        int x,
-        int y,
-        int z,
-        int xW,
-        int yW,
-        int zW,
-        int depth)
-    {
-        if (discriminator == 0) {
-            int leftXW  = xW / 2;
-            int rightXW = xW - leftXW;
-
-            left.collision(output, x, y, z, leftXW, yW, zW, depth + 1);
-            right.collision(output, x + leftXW, y, z, rightXW, yW, zW, depth + 1);
-        }
-        else if (discriminator == 1) {
-            int leftYW  = yW / 2;
-            int rightYW = yW - leftYW;
-
-            left.collision(output, x, y, z, xW, leftYW, zW, depth + 1);
-            right.collision(output, x, y + leftYW, z, xW, rightYW, zW, depth + 1);
-        }
-        else { 
-            int leftZW  = zW / 2;
-            int rightZW = zW - leftZW;
-
-            left.collision(output, x, y, z, xW, yW, leftZW,  depth + 1);
-            right.collision(output, x, y, z + leftZW, xW, yW, rightZW, depth + 1);
-        }
-    }
     
     private boolean boxesIntersect(
         int ax, int ay, int az, int axW, int ayW, int azW,
@@ -455,93 +552,5 @@ public class InternalNode
         return (ax < bx2 && bx < ax2)
             && (ay < by2 && by < ay2)
             && (az < bz2 && bz < az2);
-    }
-
-    @Override
-    public void intersect(
-        StringBuilder output,
-        int nodeX, int nodeY, int nodeZ,
-        int nodeXW, int nodeYW, int nodeZW,
-        int qx, int qy, int qz, int qxW, int qyW, int qzW,
-        int depth)
-    {
-        if (!boxesIntersect(nodeX, nodeY, nodeZ, nodeXW, nodeYW, nodeZW,
-                            qx, qy, qz, qxW, qyW, qzW)) {
-            return;
-        }
-
-        BinTree.count++;
-
-        output.append("in internal node ")
-              .append(nodeX).append(" ")
-              .append(nodeY).append(" ")
-              .append(nodeZ).append(" ")
-              .append(nodeXW).append(" ")
-              .append(nodeYW).append(" ")
-              .append(nodeZW).append(" ")
-              .append(depth).append("\r\n");
-
-        if (discriminator == 0) {
-            int leftXW  = nodeXW / 2;
-            int rightXW = nodeXW - leftXW;
-
-            int leftX   = nodeX;
-            int rightX  = nodeX + leftXW;
-            int childY  = nodeY;
-            int childZ  = nodeZ;
-            int childYW = nodeYW;
-            int childZW = nodeZW;
-
-            if (leftXW > 0 &&
-                boxesIntersect(leftX, childY, childZ, leftXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
-                left.intersect(output,
-                               leftX, childY, childZ,
-                               leftXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW,
-                               depth + 1);
-            }
-
-            if (rightXW > 0 &&
-                boxesIntersect(rightX, childY, childZ, rightXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
-                right.intersect(output,
-                                rightX, childY, childZ,
-                                rightXW, childYW, childZW,
-                                qx, qy, qz, qxW, qyW, qzW,
-                                depth + 1);
-            }
-        }
-        else if (discriminator == 1) {
-            int leftYW  = nodeYW / 2;
-            int rightYW = nodeYW - leftYW;
-
-            int leftY   = nodeY;
-            int rightY  = nodeY + leftYW;
-            int childX  = nodeX;
-            int childZ  = nodeZ;
-            int childXW = nodeXW;
-            int childZW = nodeZW;
-
-            if (leftYW > 0 &&
-                boxesIntersect(childX, leftY, childZ, childXW, leftYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
-                left.intersect(output,
-                               childX, leftY, childZ,
-                               childXW, leftYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW,
-                               depth + 1);
-            }
-
-            if (rightYW > 0 &&
-                boxesIntersect(childX, rightY, childZ, childXW, rightYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
-                right.intersect(output,
-                                childX, rightY, childZ,
-                                childXW, rightYW, childZW,
-                                qx, qy, qz, qxW, qyW, qzW,
-                                depth + 1);
-            }
-        }
     }
 }
