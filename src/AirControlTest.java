@@ -727,14 +727,8 @@ public class AirControlTest extends TestCase {
         assertFuzzyEquals(
             "The following collisions exist in the database:\r\n"
             + "in leaf node 0 0 0 512 512 1024 2\r\n"
-//            + "airplane a1 0 210 100 520 342 30 usair 717 4 and "
-//            + "balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
             + "in leaf node 0 512 0 512 512 1024 2\r\n"
-//            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 "
-//            + "100 20 10 50 50 dinosaur 1\r\n"
             + "in leaf node 512 0 0 512 1024 1024 1\r\n",
-//            + "rocket enterprise 0 100 20 10 50 50 5000 9929 and bird pterodactyl 0 "
-//            + "100 20 10 50 50 dinosaur 1\r\n",
             w.collisions());
         
         
@@ -845,6 +839,9 @@ public class AirControlTest extends TestCase {
         
         assertTrue(w.add(new Balloon("B1", 100, 11, 101, 21, 12, 31, "hot_air",
             15)));
+        assertFuzzyEquals( "the following objects intersect 500 500 500 200 200 200\r\n"
+            + "in leaf node 0 0 0 1024 1024 1024 0\r\n"
+            + "1 nodes were visited in the bintree", w.intersect(500,500,500,200,200,200)); 
         assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 520, 342, 30, "USAir",
             717, 4)));
         assertTrue(w.add(new Drone("D1", 100, 1010, 101, 924, 2, 900, "Droners",
@@ -869,12 +866,8 @@ public class AirControlTest extends TestCase {
         + "in internal node 0 0 0 1024 1024 1024 0\r\n"
         + "in internal node 0 0 0 512 1024 1024 1\r\n"
         +"in leaf node 0 0 0 512 512 1024 2\r\n"
-//        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
         +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
         +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
-        //+"in leaf node 0 512 0 512 512 1024 2\r\n"
-//        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
-        //+"in leaf node 512 0 0 512 1024 1024 1\r\n"
         +"3 nodes were visited in the bintree\r\n",
         w.intersect(20, 20, 20, 104, 104, 104));   
         assertFuzzyEquals(
@@ -882,11 +875,6 @@ public class AirControlTest extends TestCase {
         + "in internal node 0 0 0 1024 1024 1024 0\r\n"
         + "in internal node 0 0 0 512 1024 1024 1\r\n"
         +"in leaf node 0 512 0 512 512 1024 2\r\n"
-//        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
-//        +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
-//        +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
-        //+"in leaf node 0 512 0 512 512 1024 2\r\n"
-//        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
         +"in leaf node 512 0 0 512 1024 1024 1\r\n"
         +"4 nodes were visited in the bintree\r\n",
         w.intersect(500, 520, 900, 104, 104, 104)); 
@@ -916,5 +904,887 @@ public class AirControlTest extends TestCase {
             1)));
         w.delete("B2");
         w.clear();
+    }
+    /**
+     * tests the delete mehtod in bin again
+     *
+     * @throws Exception
+     */
+    public void testBinDeleteTwo() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1", 100, 11, 101, 21, 12, 31, "hot_air",
+            15)));
+        assertFuzzyEquals(
+             "    leaf with 1 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "    (balloon b1 100 11 101 21 12 31 hot_air 15)\r\n"
+            + "1 Bintree nodes printed\r\n", w.printbintree());
+        assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 52, 342, 30, "USAir",
+            717, 4)));
+        assertFuzzyEquals(
+            "    leaf with 2 objects 0 0 0 1024 1024 1024 0\r\n"
+           + "    (airplane a1 0 210 100 52 342 30 usair 717 4)\r\n"
+           + "    (balloon b1 100 11 101 21 12 31 hot_air 15)\r\n"
+           + "1 Bintree nodes printed\r\n", w.printbintree());
+        assertTrue(w.add(new Drone("D1", 100, 10, 101, 90, 2, 90, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("B2", 1000, 100, 20, 9, 50, 530, "Dinosaur",
+            1)));
+        assertFuzzyEquals("I (0, 0, 0, 1024, 1024, 1024) 0\r\n"
+            + "    leaf with 3 objects 0 0 0 512 1024 1024 1\r\n"
+            + "    (airplane a1 0 210 100 52 342 30 usair 717 4)\r\n"
+            + "    (balloon b1 100 11 101 21 12 31 hot_air 15)\r\n"
+            + "    drone d1 100 10 101 90 2 90 droners 3\r\n"
+            + "    leaf with 1 objects 512 0 0 512 1024 1024 1\r\n"
+            + "    bird b2 1000 100 20 9 50 530 dinosaur 1\r\n"
+            + "3 Bintree nodes printed\r\n", w.printbintree());
+        assertFuzzyEquals("Drone D1 100 10 101 90 2 90 Droners 3", w.delete(
+            "D1"));
+        assertFuzzyEquals(
+             "    leaf with 3 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "    (airplane a1 0 210 100 52 342 30 usair 717 4)\r\n"
+            + "    (balloon b1 100 11 101 21 12 31 hot_air 15)\r\n"
+            + "    bird b2 1000 100 20 9 50 530 dinosaur 1\r\n"
+            + "1 Bintree nodes printed\r\n", w.printbintree());
+    }
+    /**
+     * tests the insert mehtod in bin with edge cases
+     *
+     * @throws Exception
+     */
+    public void testBinInsertEdge() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("B1", 100, 11, 0, 21, 12, 31, "hot_air",
+            15)));
+        assertFuzzyEquals(
+             "    leaf with 1 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "    (balloon b1 100 11 0 21 12 31 hot_air 15)\r\n"
+            + "1 Bintree nodes printed\r\n", w.printbintree());
+        assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 52, 1, 30, "USAir",
+            717, 4)));
+        assertFuzzyEquals(
+            "    leaf with 2 objects 0 0 0 1024 1024 1024 0\r\n"
+           + "    (airplane a1 0 210 100 52 1 30 usair 717 4)\r\n"
+           + "    (balloon b1 100 11 0 21 12 31 hot_air 15)\r\n"
+           + "1 Bintree nodes printed\r\n", w.printbintree());
+        assertTrue(w.add(new Drone("D1", 100, 10, 101, 90, 2, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("B2", 1000, 100, 20, 1, 50, 530, "Dinosaur",
+            1)));
+        assertFuzzyEquals("I (0, 0, 0, 1024, 1024, 1024) 0\r\n"
+            + "    leaf with 3 objects 0 0 0 512 1024 1024 1\r\n"
+            + "    (airplane a1 0 210 100 52 1 30 usair 717 4)\r\n"
+            + "    (balloon b1 100 11 0 21 12 31 hot_air 15)\r\n"
+            + "    drone d1 100 10 101 90 2 1 droners 3\r\n"
+            + "    leaf with 1 objects 512 0 0 512 1024 1024 1\r\n"
+            + "    bird b2 1000 100 20 1 50 530 dinosaur 1\r\n"
+            + "3 Bintree nodes printed\r\n", w.printbintree());
+        assertFuzzyEquals("Drone D1 100 10 101 90 2 1 Droners 3", w.delete(
+            "D1"));
+        assertFuzzyEquals(
+             "    leaf with 3 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "    (airplane a1 0 210 100 52 1 30 usair 717 4)\r\n"
+            + "    (balloon b1 100 11 0 21 12 31 hot_air 15)\r\n"
+            + "    bird b2 1000 100 20 1 50 530 dinosaur 1\r\n"
+            + "1 Bintree nodes printed\r\n", w.printbintree());        
+        assertTrue(w.add(new Drone("24Z", 0, 0, 0, 1, 1, 1024, "Droners",
+                3)));
+            assertTrue(w.add(new Bird("24A", 0, 0, 0, 1024, 1024, 1024, "Dinosaur",
+                1)));
+            assertTrue(w.add(new Balloon("12X", 512, 0, 0, 512, 1, 1, "hot_air",
+                15)));
+            assertTrue(w.add(new AirPlane("12Y", 0, 512, 0, 1, 512, 1, "USAir",
+                717, 4)));
+            assertFuzzyEquals(
+                "i 0 0 0 1024 1024 1024 0\r\n"
+                + "i 0 0 0 512 1024 1024 1\r\n"
+                + "i 0 0 0 512 512 1024 2\r\n"
+                + "i 0 0 0 512 512 512 3\r\n"
+                + "i 0 0 0 256 512 512 4\r\n"
+                + "i 0 0 0 256 256 512 5\r\n"
+                + "i 0 0 0 256 256 256 6\r\n"
+                + "i 0 0 0 128 256 256 7\r\n"
+                + "leaf with 3 objects 0 0 0 128 128 256 8\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+                + "balloon b1 100 11 0 21 12 31 hot_air 15\r\n"
+                + "leaf with 2 objects 0 128 0 128 128 256 8\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "airplane a1 0 210 100 52 1 30 usair 717 4\r\n"
+                + "leaf with 1 objects 128 0 0 128 256 256 7\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "leaf with 2 objects 0 0 256 256 256 256 6\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+                + "leaf with 1 objects 0 256 0 256 256 512 5\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "leaf with 1 objects 256 0 0 256 512 512 4\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "leaf with 2 objects 0 0 512 512 512 512 3\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+                + "leaf with 2 objects 0 512 0 512 512 1024 2\r\n"
+                + "airplane 12y 0 512 0 1 512 1 usair 717 4\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "leaf with 3 objects 512 0 0 512 1024 1024 1\r\n"
+                + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+                + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+                + "bird b2 1000 100 20 1 50 530 dinosaur 1\r\n"
+                + "17 bintree nodes printed", w.printbintree());   
+            assertFuzzyEquals("bird b2 1000 100 20 1 50 530 dinosaur 1", w.delete(
+                "B2"));
+            
+    }
+    /**
+     * tests the insert mehtod in bin with edge cases
+     *
+     * @throws Exception
+     */
+    public void testBinInsertMass() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("0X", 0, 1, 1, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0Y", 1, 0, 1, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("0Z", 1, 1, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("0A", 0, 0, 0, 1, 1, 1, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("23X", 1023, 0, 0, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("23A", 1023, 1023, 1023, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("23Y", 0, 1023, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("23Z", 0, 0, 1023, 1, 1, 1, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("24X", 0, 0, 0, 1024, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("24Y", 0, 0, 0, 1, 1024, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("24Z", 0, 0, 0, 1, 1, 1024, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("24A", 0, 0, 0, 1024, 1024, 1024, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("12X", 512, 0, 0, 512, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("12Y", 0, 512, 0, 1, 512, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("12Z", 0, 0, 512, 1, 1, 512, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("12A", 512, 512, 512, 512, 512, 512, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("B12", 512, 512, 512, 1, 1, 1, "hot_air",
+            15)));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "i 0 0 0 1 2 2 28\r\n"
+            + "leaf with 5 objects 0 0 0 1 1 2 29\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 3 objects 0 1 0 1 1 2 29\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "i 1 0 0 1 2 2 28\r\n"
+            + "leaf with 3 objects 1 0 0 1 1 2 29\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 1 1 0 1 1 2 29\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "leaf with 2 objects 0 0 2 2 2 2 27\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 2 0 2 2 4 26\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 2 0 0 2 4 4 25\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 4 4 4 4 24\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 4 0 4 4 8 23\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 4 0 0 4 8 8 22\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 8 8 8 8 21\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 8 0 8 8 16 20\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 8 0 0 8 16 16 19\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 16 16 16 16 18\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 16 0 16 16 32 17\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 16 0 0 16 32 32 16\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 32 32 32 32 15\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 32 0 32 32 64 14\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 32 0 0 32 64 64 13\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 64 64 64 64 12\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 64 0 64 64 128 11\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 64 0 0 64 128 128 10\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 128 128 128 128 9\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 128 0 128 128 256 8\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 128 0 0 128 256 256 7\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 0 256 256 256 256 6\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 256 0 256 256 512 5\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 256 0 0 256 512 512 4\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 4 objects 0 0 512 512 512 512 3\r\n"
+            + "drone 12z 0 0 512 1 1 512 droners 3\r\n"
+            + "bird 23z 0 0 1023 1 1 1 dinosaur 1\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 4 objects 0 512 0 512 512 1024 2\r\n"
+            + "airplane 12y 0 512 0 1 512 1 usair 717 4\r\n"
+            + "drone 23y 0 1023 0 1 1 1 droners 3\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "i 512 0 0 512 1024 1024 1\r\n"
+            + "leaf with 4 objects 512 0 0 512 512 1024 2\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+            + "balloon 23x 1023 0 0 1 1 1 hot_air 15\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "i 512 512 0 512 512 1024 2\r\n"
+            + "leaf with 1 objects 512 512 0 512 512 512 3\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "i 512 512 512 512 512 512 3\r\n"
+            + "leaf with 3 objects 512 512 512 256 512 512 4\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon b12 512 512 512 1 1 1 hot_air 15\r\n"
+            + "leaf with 3 objects 768 512 512 256 512 512 4\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1\r\n"
+            + "airplane 23a 1023 1023 1023 1 1 1 usair 717 4\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "67 bintree nodes printed", w.printbintree());
+        assertFuzzyEquals("bird 24a 0 0 0 1024 1024 1024 dinosaur 1", w.delete(
+            "24A"));
+        assertFuzzyEquals("bird 12a 512 512 512 512 512 512 dinosaur 1", w.delete(
+            "12A"));
+        assertFuzzyEquals("balloon 23x 1023 0 0 1 1 1 hot_air 15", w.delete(
+            "23X"));
+        assertFuzzyEquals("airplane 12y 0 512 0 1 512 1 usair 717 4", w.delete(
+            "12Y"));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "i 0 0 0 1 2 2 28\r\n"
+            + "leaf with 4 objects 0 0 0 1 1 2 29\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 1 0 1 1 2 29\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 3 objects 1 0 0 1 2 2 28\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 2 2 2 2 27\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 2 0 2 2 4 26\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 2 0 0 2 4 4 25\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 4 4 4 4 24\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 4 0 4 4 8 23\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 4 0 0 4 8 8 22\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 8 8 8 8 21\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 8 0 8 8 16 20\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 8 0 0 8 16 16 19\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 16 16 16 16 18\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 16 0 16 16 32 17\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 16 0 0 16 32 32 16\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 32 32 32 32 15\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 32 0 32 32 64 14\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 32 0 0 32 64 64 13\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 64 64 64 64 12\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 64 0 64 64 128 11\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 64 0 0 64 128 128 10\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 128 128 128 128 9\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 128 0 128 128 256 8\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 128 0 0 128 256 256 7\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 0 256 256 256 256 6\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 1 objects 0 256 0 256 256 512 5\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 256 0 0 256 512 512 4\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 3 objects 0 0 512 512 512 512 3\r\n"
+            + "drone 12z 0 0 512 1 1 512 droners 3\r\n"
+            + "bird 23z 0 0 1023 1 1 1 dinosaur 1\r\n"
+            + "drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "leaf with 2 objects 0 512 0 512 512 1024 2\r\n"
+            + "drone 23y 0 1023 0 1 1 1 droners 3\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "i 512 0 0 512 1024 1024 1\r\n"
+            + "leaf with 2 objects 512 0 0 512 512 1024 2\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 512 512 0 512 512 1024 2\r\n"
+            + "airplane 23a 1023 1023 1023 1 1 1 usair 717 4\r\n"
+            + "balloon b12 512 512 512 1 1 1 hot_air 15\r\n"
+            + "61 bintree nodes printed", w.printbintree());
+        assertFuzzyEquals("drone 24z 0 0 0 1 1 1024 droners 3", w.delete(
+            "24Z"));
+        assertFuzzyEquals("drone 12z 0 0 512 1 1 512 droners 3", w.delete(
+            "12Z"));
+        assertFuzzyEquals("bird 23z 0 0 1023 1 1 1 dinosaur 1", w.delete(
+            "23Z"));
+        assertFuzzyEquals("airplane 0y 1 0 1 1 1 1 usair 717 4", w.delete(
+            "0Y"));
+        assertFuzzyEquals("bird 0a 0 0 0 1 1 1 dinosaur 1", w.delete(
+            "0A"));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "leaf with 3 objects 0 0 0 1 2 2 28\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 1 0 0 1 2 2 28\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 2 0 2 2 4 26\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 2 0 0 2 4 4 25\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 4 0 4 4 8 23\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 4 0 0 4 8 8 22\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 8 0 8 8 16 20\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 8 0 0 8 16 16 19\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 16 0 16 16 32 17\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 16 0 0 16 32 32 16\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 32 0 32 32 64 14\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 32 0 0 32 64 64 13\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 64 0 64 64 128 11\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 64 0 0 64 128 128 10\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 128 0 128 128 256 8\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 128 0 0 128 256 256 7\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 1 objects 0 256 0 256 256 512 5\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 1 objects 256 0 0 256 512 512 4\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 0 512 0 512 512 1024 2\r\n"
+            + "drone 23y 0 1023 0 1 1 1 droners 3\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "i 512 0 0 512 1024 1024 1\r\n"
+            + "leaf with 2 objects 512 0 0 512 512 1024 2\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 512 512 0 512 512 1024 2\r\n"
+            + "airplane 23a 1023 1023 1023 1 1 1 usair 717 4\r\n"
+            + "balloon b12 512 512 512 1 1 1 hot_air 15\r\n"
+            + "50 bintree nodes printed", w.printbintree());
+        assertFuzzyEquals("balloon 0x 0 1 1 1 1 1 hot_air 15", w.delete(
+            "0X"));
+        assertFuzzyEquals("balloon 24x 0 0 0 1024 1 1 hot_air 15", w.delete(
+            "24X"));
+        assertFuzzyEquals("drone 23y 0 1023 0 1 1 1 droners 3", w.delete(
+            "23Y"));
+        assertFuzzyEquals("airplane 23a 1023 1023 1023 1 1 1 usair 717 4", w.delete(
+            "23A"));
+        assertFuzzyEquals("balloon b12 512 512 512 1 1 1 hot_air 15", w.delete(
+            "B12"));
+        assertTrue(w.add(new Bird("12A", 512, 512, 512, 512, 512, 512, "Dinosaur",
+            1)));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "leaf with 2 objects 0 0 0 512 1024 1024 1\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "leaf with 2 objects 512 0 0 512 1024 1024 1\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+            + "3 bintree nodes printed", w.printbintree());
+        assertFuzzyEquals("drone 0z 1 1 0 1 1 1 droners 3", w.delete(
+            "0Z"));
+        assertFuzzyEquals("leaf with 3 objects 0 0 0 1024 1024 1024 0\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "1 bintree nodes printed", w.printbintree());
+        assertFuzzyEquals("bird 12a 512 512 512 512 512 512 dinosaur 1", w.delete(
+            "12A"));
+        assertFuzzyEquals("balloon 12x 512 0 0 512 1 1 hot_air 15", w.delete(
+            "12X"));
+        assertFuzzyEquals("airplane 24y 0 0 0 1 1024 1 usair 717 4", w.delete(
+            "24Y"));
+        assertFuzzyEquals("e 0 0 0 1024 1024 1024 0\r\n"
+            + "1 bintree nodes printed", w.printbintree());
+    }
+    /**
+     * tests the insert mehtod in bin trying to get node to zero
+     *
+     * @throws Exception
+     */
+    public void testBinInsertZero() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertTrue(w.add(new Balloon("0X", 0, 1, 1, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0Y", 1, 0, 1, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("0Z", 1, 1, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("0A", 0, 0, 0, 1, 1, 1, "Dinosaur",
+            1)));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "leaf with 2 objects 0 0 0 1 2 2 28\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 1 0 0 1 2 2 28\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "30 bintree nodes printed", w.printbintree());
+        assertTrue(w.add(new Balloon("0A2", 0, 0, 0, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0A3", 0, 0, 0, 1, 1, 1, "USAir",
+            717, 4)));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "i 0 0 0 1 2 2 28\r\n"
+            + "leaf with 3 objects 0 0 0 1 1 2 29\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1\r\n"
+            + "balloon 0a2 0 0 0 1 1 1 hot_air 15\r\n"
+            + "airplane 0a3 0 0 0 1 1 1 usair 717 4\r\n"
+            + "leaf with 1 objects 0 1 0 1 1 2 29\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 1 0 0 1 2 2 28\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "32 bintree nodes printed", w.printbintree());
+        assertTrue(w.add(new Balloon("0A4", 0, 0, 0, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0A5", 0, 0, 0, 1, 1, 1, "USAir",
+            717, 4)));
+        assertFuzzyEquals("i 0 0 0 1024 1024 1024 0\r\n"
+            + "i 0 0 0 512 1024 1024 1\r\n"
+            + "i 0 0 0 512 512 1024 2\r\n"
+            + "i 0 0 0 512 512 512 3\r\n"
+            + "i 0 0 0 256 512 512 4\r\n"
+            + "i 0 0 0 256 256 512 5\r\n"
+            + "i 0 0 0 256 256 256 6\r\n"
+            + "i 0 0 0 128 256 256 7\r\n"
+            + "i 0 0 0 128 128 256 8\r\n"
+            + "i 0 0 0 128 128 128 9\r\n"
+            + "i 0 0 0 64 128 128 10\r\n"
+            + "i 0 0 0 64 64 128 11\r\n"
+            + "i 0 0 0 64 64 64 12\r\n"
+            + "i 0 0 0 32 64 64 13\r\n"
+            + "i 0 0 0 32 32 64 14\r\n"
+            + "i 0 0 0 32 32 32 15\r\n"
+            + "i 0 0 0 16 32 32 16\r\n"
+            + "i 0 0 0 16 16 32 17\r\n"
+            + "i 0 0 0 16 16 16 18\r\n"
+            + "i 0 0 0 8 16 16 19\r\n"
+            + "i 0 0 0 8 8 16 20\r\n"
+            + "i 0 0 0 8 8 8 21\r\n"
+            + "i 0 0 0 4 8 8 22\r\n"
+            + "i 0 0 0 4 4 8 23\r\n"
+            + "i 0 0 0 4 4 4 24\r\n"
+            + "i 0 0 0 2 4 4 25\r\n"
+            + "i 0 0 0 2 2 4 26\r\n"
+            + "i 0 0 0 2 2 2 27\r\n"
+            + "i 0 0 0 1 2 2 28\r\n"
+            + "leaf with 5 objects 0 0 0 1 1 2 29\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1\r\n"
+            + "balloon 0a2 0 0 0 1 1 1 hot_air 15\r\n"
+            + "airplane 0a3 0 0 0 1 1 1 usair 717 4\r\n"
+            + "balloon 0a4 0 0 0 1 1 1 hot_air 15\r\n"
+            + "airplane 0a5 0 0 0 1 1 1 usair 717 4\r\n"
+            + "leaf with 1 objects 0 1 0 1 1 2 29\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "leaf with 2 objects 1 0 0 1 2 2 28\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "32 bintree nodes printed", w.printbintree());
+    }
+    /**
+     * tests the insert mehtod in bin with edge cases
+     *
+     * @throws Exception
+     */
+    public void testBinCollisionMass() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        assertNull(w.delete("H2"));
+        assertNull(w.delete("s2"));
+        assertNull(w.delete("d1"));
+        assertNull(w.delete("b1"));
+        assertTrue(w.add(new Balloon("0X", 0, 1, 1, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0Y", 1, 0, 1, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("0Z", 1, 1, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("0A", 0, 0, 0, 1, 1, 1, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("23X", 1023, 0, 0, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("23A", 1023, 1023, 1023, 1, 1, 1, "USAir",
+            717, 4)));
+        assertNull(w.delete("0z"));
+        assertNull(w.delete("s2"));
+        assertNull(w.delete("d1"));
+        assertNull(w.delete("b1"));
+        assertTrue(w.add(new Drone("23Y", 0, 1023, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("23Z", 0, 0, 1023, 1, 1, 1, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("24X", 0, 0, 0, 1024, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("24Y", 0, 0, 0, 1, 1024, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("24Z", 0, 0, 0, 1, 1, 1024, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("24A", 0, 0, 0, 1024, 1024, 1024, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("12X", 512, 0, 0, 512, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("12Y", 0, 512, 0, 1, 512, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("12Z", 0, 0, 512, 1, 1, 512, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("12A", 512, 512, 512, 512, 512, 512, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("B12", 512, 512, 512, 1, 1, 1, "hot_air",
+            15)));
+        assertFuzzyEquals(
+            "the following collisions exist in the database\r\n"
+            + "in leaf node 0 0 0 1 1 2 29\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1 and balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1 and airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "bird 0a 0 0 0 1 1 1 dinosaur 1 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1 and balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1 and airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15 and airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "balloon 24x 0 0 0 1024 1 1 hot_air 15 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "airplane 24y 0 0 0 1 1024 1 usair 717 4 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "in leaf node 0 1 0 1 1 2 29\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "in leaf node 1 0 0 1 1 2 29\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "in leaf node 1 1 0 1 1 2 29\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "in leaf node 0 0 2 2 2 2 27\r\n"
+            + "in leaf node 0 2 0 2 2 4 26\r\n"
+            + "in leaf node 2 0 0 2 4 4 25\r\n"
+            + "in leaf node 0 0 4 4 4 4 24\r\n"
+            + "in leaf node 0 4 0 4 4 8 23\r\n"
+            + "in leaf node 4 0 0 4 8 8 22\r\n"
+            + "in leaf node 0 0 8 8 8 8 21\r\n"
+            + "in leaf node 0 8 0 8 8 16 20\r\n"
+            + "in leaf node 8 0 0 8 16 16 19\r\n"
+            + "in leaf node 0 0 16 16 16 16 18\r\n"
+            + "in leaf node 0 16 0 16 16 32 17\r\n"
+            + "in leaf node 16 0 0 16 32 32 16\r\n"
+            + "in leaf node 0 0 32 32 32 32 15\r\n"
+            + "in leaf node 0 32 0 32 32 64 14\r\n"
+            + "in leaf node 32 0 0 32 64 64 13\r\n"
+            + "in leaf node 0 0 64 64 64 64 12\r\n"
+            + "in leaf node 0 64 0 64 64 128 11\r\n"
+            + "in leaf node 64 0 0 64 128 128 10\r\n"
+            + "in leaf node 0 0 128 128 128 128 9\r\n"
+            + "in leaf node 0 128 0 128 128 256 8\r\n"
+            + "in leaf node 128 0 0 128 256 256 7\r\n"
+            + "in leaf node 0 0 256 256 256 256 6\r\n"
+            + "in leaf node 0 256 0 256 256 512 5\r\n"
+            + "in leaf node 256 0 0 256 512 512 4\r\n"
+            + "in leaf node 0 0 512 512 512 512 3\r\n"
+            + "drone 12z 0 0 512 1 1 512 droners 3 and bird 23z 0 0 1023 1 1 1 dinosaur 1\r\n"
+            + "drone 12z 0 0 512 1 1 512 droners 3 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 12z 0 0 512 1 1 512 droners 3 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "bird 23z 0 0 1023 1 1 1 dinosaur 1 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "bird 23z 0 0 1023 1 1 1 dinosaur 1 and drone 24z 0 0 0 1 1 1024 droners 3\r\n"
+            + "in leaf node 0 512 0 512 512 1024 2\r\n"
+            + "airplane 12y 0 512 0 1 512 1 usair 717 4 and drone 23y 0 1023 0 1 1 1 droners 3\r\n"
+            + "airplane 12y 0 512 0 1 512 1 usair 717 4 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "airplane 12y 0 512 0 1 512 1 usair 717 4 and airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "drone 23y 0 1023 0 1 1 1 droners 3 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "drone 23y 0 1023 0 1 1 1 droners 3 and airplane 24y 0 0 0 1 1024 1 usair 717 4\r\n"
+            + "in leaf node 512 0 0 512 512 1024 2\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15 and balloon 23x 1023 0 0 1 1 1 hot_air 15\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 12x 512 0 0 512 1 1 hot_air 15 and balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "balloon 23x 1023 0 0 1 1 1 hot_air 15 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "balloon 23x 1023 0 0 1 1 1 hot_air 15 and balloon 24x 0 0 0 1024 1 1 hot_air 15\r\n"
+            + "in leaf node 512 512 0 512 512 512 3\r\n"
+            + "in leaf node 512 512 512 256 512 512 4\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1 and balloon b12 512 512 512 1 1 1 hot_air 15\r\n"
+            + "bird 24a 0 0 0 1024 1024 1024 dinosaur 1 and balloon b12 512 512 512 1 1 1 hot_air 15\r\n"
+            + "in leaf node 768 512 512 256 512 512 4\r\n"
+            + "bird 12a 512 512 512 512 512 512 dinosaur 1 and airplane 23a 1023 1023 1023 1 1 1 usair 717 4\r\n"
+            + "airplane 23a 1023 1023 1023 1 1 1 usair 717 4 and bird 24a 0 0 0 1024 1024 1024 dinosaur 1",
+            w.collisions());
+    }
+    /**
+     * tests the insert mehtod in bin with edge cases
+     *
+     * @throws Exception
+     */
+    public void testBinIntersectMass() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        w.clear();
+        assertFuzzyEquals( "the following objects intersect 0 0 0 200 200 200\r\n"
+            + "1 nodes were visited in the bintree", w.intersect(0,0,0,200,200,200)); 
+        assertTrue(w.add(new Balloon("0X", 0, 1, 1, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("0Y", 1, 0, 1, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("0Z", 1, 1, 0, 1, 1, 1, "Droners",
+            3)));
+        assertFuzzyEquals( "the following objects intersect 0 0 0 200 200 200\r\n"
+            + "in leaf node 0 0 0 1024 1024 1024 0\r\n"
+            + "balloon 0x 0 1 1 1 1 1 hot_air 15\r\n"
+            + "airplane 0y 1 0 1 1 1 1 usair 717 4\r\n"
+            + "drone 0z 1 1 0 1 1 1 droners 3\r\n"
+            + "1 nodes were visited in the bintree", w.intersect(0,0,0,200,200,200)); 
+        assertTrue(w.add(new Bird("0A", 0, 0, 0, 1, 1, 1, "Dinosaur",
+            1)));
+        assertFuzzyEquals( "the following objects intersect 500 500 500 200 200 200\r\n"
+            + "in internal node 0 0 0 1024 1024 1024 0\r\n"
+            + "in internal node 0 0 0 512 1024 1024 1\r\n"
+            + "in internal node 0 0 0 512 512 1024 2\r\n"
+            + "in internal node 0 0 0 512 512 512 3\r\n"
+            + "8 nodes were visited in the bintree", w.intersect(500,500,500,200,200,200)); 
+        assertTrue(w.add(new Balloon("23X", 1023, 0, 0, 1, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("23A", 1023, 1023, 1023, 1, 1, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("23Y", 0, 1023, 0, 1, 1, 1, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("23Z", 0, 0, 1023, 1, 1, 1, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("24X", 0, 0, 0, 1024, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("24Y", 0, 0, 0, 1, 1024, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("24Z", 0, 0, 0, 1, 1, 1024, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("24A", 0, 0, 0, 1024, 1024, 1024, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("12X", 512, 0, 0, 512, 1, 1, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("12Y", 0, 512, 0, 1, 512, 1, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("12Z", 0, 0, 512, 1, 1, 512, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("12A", 512, 512, 512, 512, 512, 512, "Dinosaur",
+            1)));
+        assertTrue(w.add(new Balloon("B12", 512, 512, 512, 1, 1, 1, "hot_air",
+            15)));
     }
 }

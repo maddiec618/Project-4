@@ -99,7 +99,7 @@ public class BinTree
             .append(y).append(", ").append(z).append(", ").append(xW)
             .append(", ").append(yW).append(", ").append(zW).append(")\r\n");
 
-        count = 0;
+        c2 = 0;
 
         root.intersect(
             out,
@@ -117,7 +117,7 @@ public class BinTree
             zW,
             0);
 
-        out.append(count).append(" nodes were visited in the bintree\r\n");
+        out.append(c2).append(" nodes were visited in the bintree\r\n");
         return out.toString();
     }
     

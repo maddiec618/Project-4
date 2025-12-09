@@ -100,7 +100,6 @@ public class EmptyLeaf
         int qx, int qy, int qz, int qxW, int qyW, int qzW,
         int depth)
     {
-        // Node was visited, but it has no objects.
-        BinTree.count++;
+        BinTree.addCount();
     }
 }

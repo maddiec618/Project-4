@@ -58,20 +58,20 @@ public class LeafNode
         int n = 0;
         for (int i = 0; i < boxes.length; i++)
         {
-            if (boxes[i] != null)
-            {
+//            if (boxes[i] != null)
+//            {
                 n++;
-            }
+//            }
         }
 
         AirObject[] nonNull = new AirObject[n];
         int idx = 0;
         for (int i = 0; i < boxes.length; i++)
         {
-            if (boxes[i] != null)
-            {
+//            if (boxes[i] != null)
+//            {
                 nonNull[idx++] = boxes[i];
-            }
+//            }
         }
 
         for (int i = 0; i < n; i++)
@@ -132,12 +132,12 @@ public class LeafNode
         }
         temp[count] = obj;
 
-        if (xW <= 1 && yW <= 1 && zW <= 1)
-        {
-            addObject(obj);
-            sortNode();
-            return this;
-        }
+//        if (xW <= 1 && yW <= 1 && zW <= 1)
+//        {
+//            addObject(obj);
+//            sortNode();
+//            return this;
+//        }
 
         if (allBoxesIntersect(temp))
         {
@@ -157,10 +157,10 @@ public class LeafNode
 
     public void sortNode()
     {
-        int n = count;
-        for (int i = 0; i < n - 1; i++)
+        int n = count-1;
+        for (int i = 0; i < n ; i++)
         {
-            for (int j = 0; j < n - 1 - i; j++)
+            for (int j = 0; j < n  - i; j++)
             {
                 if (objects[j].compareTo(objects[j + 1]) > 0)
                 {
@@ -238,10 +238,10 @@ public class LeafNode
     {
         boolean removed = removeObject(obj);
 
-        if (!removed)
-        {
-            return this;
-        }
+//        if (!removed)
+//        {
+//            return this;
+//        }
 
         sortNode();
 
@@ -255,15 +255,16 @@ public class LeafNode
 
     public boolean removeObject(AirObject obj)
     {
-        if (obj == null)
-        {
-            return false;
-        }
+//        if (obj == null)
+//        {
+//            return false;
+//        }
         String target = obj.getName();
         for (int i = 0; i < count; i++)
         {
             AirObject cur = objects[i];
-            if (cur != null && cur.getName().equals(target))
+            //cur != null &&
+            if (cur.getName().equals(target))
             {
                 for (int j = i; j < count - 1; j++)
                 {
@@ -325,12 +326,9 @@ public class LeafNode
         for (int j = i + 1; j < count; j++) {
             AirObject b = objects[j];
             if (twoIntersect(a, b)) {
-                // Calculate the origin of the intersection box
                 int ix = Math.max(a.getXOrig(), b.getXOrig());
                 int iy = Math.max(a.getYOrig(), b.getYOrig());
                 int iz = Math.max(a.getZOrig(), b.getZOrig());
-                
-                // Only report if the intersection origin is within this node
                 if (ix >= x && ix < x + xW
                     && iy >= y && iy < y + yW
                     && iz >= z && iz < z + zW) {
@@ -360,7 +358,7 @@ public class LeafNode
         {
             return;
         }
-        BinTree.count++;
+        BinTree.addCount();
 
         output.append("In leaf node (")
               .append(nodeX).append(", ")
