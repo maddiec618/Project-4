@@ -355,6 +355,11 @@ public class LeafNode
         int qx, int qy, int qz, int qxW, int qyW, int qzW,
         int depth)
     {
+        if (!BinTree.boxesIntersect(nodeX, nodeY, nodeZ, nodeXW, nodeYW, nodeZW, qx, 
+            qy, qz, qxW, qyW, qzW)) 
+        {
+            return;
+        }
         BinTree.count++;
 
         output.append("In leaf node (")

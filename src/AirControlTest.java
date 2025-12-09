@@ -872,23 +872,23 @@ public class AirControlTest extends TestCase {
 //        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
         +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
         +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
-        +"in leaf node 0 512 0 512 512 1024 2\r\n"
+        //+"in leaf node 0 512 0 512 512 1024 2\r\n"
 //        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
-        +"in leaf node 512 0 0 512 1024 1024 1\r\n"
-        +"5 nodes were visited in the bintree\r\n",
+        //+"in leaf node 512 0 0 512 1024 1024 1\r\n"
+        +"3 nodes were visited in the bintree\r\n",
         w.intersect(20, 20, 20, 104, 104, 104));   
         assertFuzzyEquals(
         "The following objects intersect (500 520 900 104 104 104):\r\n" 
         + "in internal node 0 0 0 1024 1024 1024 0\r\n"
         + "in internal node 0 0 0 512 1024 1024 1\r\n"
-        +"in leaf node 0 0 0 512 512 1024 2\r\n"
+        +"in leaf node 0 512 0 512 512 1024 2\r\n"
 //        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
 //        +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
 //        +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
-        +"in leaf node 0 512 0 512 512 1024 2\r\n"
+        //+"in leaf node 0 512 0 512 512 1024 2\r\n"
 //        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
         +"in leaf node 512 0 0 512 1024 1024 1\r\n"
-        +"5 nodes were visited in the bintree\r\n",
+        +"4 nodes were visited in the bintree\r\n",
         w.intersect(500, 520, 900, 104, 104, 104)); 
     }
     /**

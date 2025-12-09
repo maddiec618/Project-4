@@ -225,7 +225,7 @@ public class WorldDB implements ATC {
      */
     public String intersect(int x, int y, int z, int xwid, int ywid, int zwid) {
         if (x < 0 || y < 0 || z < 0 || xwid < 0 || ywid < 0 || zwid < 0
-            || x > 1024 || y > 1024 || z > 1024 || xwid + x > 1024 || zwid
+            || x >= 1024 || y >= 1024 || z >= 1024 || xwid + x > 1024 || zwid
                 + z > 1024 || ywid + y > 1024) {
             return null;
         }
