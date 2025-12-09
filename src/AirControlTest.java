@@ -774,12 +774,14 @@ public class AirControlTest extends TestCase {
         w.add(new Balloon("B3", 15, 15, 15, 10, 10, 10, "air", 5));
         w.add(new Balloon("B4", 16, 16, 16, 10, 10, 10, "air", 5));
 
+        assertNotNull(w.intersect(0, 0, 0, 200, 200, 200));
+        
         assertFuzzyEquals("leaf with 4 objects 0 0 0 1024 1024 1024 0\r\n"
             + "balloon b1 10 10 10 20 20 20 air 5\r\n"
             + "balloon b2 12 12 12 18 18 18 air 5\r\n"
             + "balloon b3 15 15 15 10 10 10 air 5\r\n"
             + "balloon b4 16 16 16 10 10 10 air 5\r\n"
-            + "1 bintree nodes printed", w.printbintree());
-       
+            + "1 bintree nodes printed", w.printbintree());      
     }
+    
 }

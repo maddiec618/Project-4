@@ -120,4 +120,23 @@ public class BinTree
         out.append(count).append(" nodes were visited in the bintree\r\n");
         return out.toString();
     }
+    
+    public static boolean boxesIntersect(
+        int ax, int ay, int az, int axW, int ayW, int azW,
+        int bx, int by, int bz, int bxW, int byW, int bzW)
+    {
+        int ax2 = ax + axW;
+        int ay2 = ay + ayW;
+        int az2 = az + azW;
+
+        int bx2 = bx + bxW;
+        int by2 = by + byW;
+        int bz2 = bz + bzW;
+
+        // Strict < so touching faces do NOT count as intersection
+        return (ax < bx2 && bx < ax2)
+            && (ay < by2 && by < ay2)
+            && (az < bz2 && bz < az2);
+    }
+
 }

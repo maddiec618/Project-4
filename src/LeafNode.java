@@ -42,23 +42,11 @@ public class LeafNode
      */
     private boolean twoIntersect(AirObject box1, AirObject box2)
     {
-        int b1X = box1.getXOrig();
-        int b1Y = box1.getYOrig();
-        int b1Z = box1.getZOrig();
-        int b1XW = b1X + box1.getXWidth();
-        int b1YW = b1Y + box1.getYWidth();
-        int b1ZW = b1Z + box1.getZWidth();
-
-        int b2X = box2.getXOrig();
-        int b2Y = box2.getYOrig();
-        int b2Z = box2.getZOrig();
-        int b2XW = b2X + box2.getXWidth();
-        int b2YW = b2Y + box2.getYWidth();
-        int b2ZW = b2Z + box2.getZWidth();
-
-        return (b1X < b2XW && b2X < b1XW) && (b1Y < b2YW && b2Y < b1YW)
-            && (b1Z < b2ZW && b2Z < b1ZW);
-
+        return BinTree.boxesIntersect(
+            box1.getXOrig(), box1.getYOrig(), box1.getZOrig(),
+            box1.getXWidth(), box1.getYWidth(), box1.getZWidth(),
+            box2.getXOrig(), box2.getYOrig(), box2.getZOrig(),
+            box2.getXWidth(), box2.getYWidth(), box2.getZWidth());
     }
 
 
@@ -169,12 +157,7 @@ public class LeafNode
 
     public void sortNode()
     {
-        int n = 0;
-        for (AirObject obj : objects)
-        {
-            if (obj != null)
-                n++;
-        }
+        int n = count;
         for (int i = 0; i < n - 1; i++)
         {
             for (int j = 0; j < n - 1 - i; j++)
@@ -223,18 +206,6 @@ public class LeafNode
         return output;
 
     }
-
-
-    /**
-     * gets teh count of the leaf node
-     * 
-     * @return in representing the number of objects in the node
-     */
-    public int getCount()
-    {
-        return count;
-    }
-
 
     /**
      * gets tha array of objects
@@ -306,7 +277,7 @@ public class LeafNode
         return false;
     }
 
-
+    @Override
     public void collision(
         StringBuilder output,
         int x,
@@ -317,26 +288,31 @@ public class LeafNode
         int zW,
         int depth)
     {
-        output.append("In leaf node (").append(x).append(", ").append(y)
-            .append(", ").append(z).append(", ").append(xW).append(", ")
-            .append(yW).append(", ").append(zW).append(") ").append(depth)
-            .append("\r\n");
+        output.append("In leaf node (")
+            .append(x).append(", ")
+            .append(y).append(", ")
+            .append(z).append(", ")
+            .append(xW).append(", ")
+            .append(yW).append(", ")
+            .append(zW).append(") ")
+            .append(depth).append("\r\n");
 
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             AirObject a = objects[i];
-            for (int j = i + 1; j < count; j++)
-            {
+            for (int j = i + 1; j < count; j++) {
                 AirObject b = objects[j];
-                if (twoIntersect(a, b))
-                {
-                    output.append("(").append(a.toString().trim())
-                        .append(" and ").append(b.toString().trim())
-                        .append(")\r\n");
+                if (twoIntersect(a, b)) {
+                    // keep trim() so you don’t get embedded newlines
+                    output.append("(")
+                          .append(a.toString().trim())
+                          .append(" and ")
+                          .append(b.toString().trim())
+                          .append(")\r\n");
                 }
             }
         }
     }
+
     
     @Override
     public void intersect(
@@ -348,13 +324,13 @@ public class LeafNode
     {
         BinTree.count++;
 
-        output.append("in leaf node ")
-              .append(nodeX).append(" ")
-              .append(nodeY).append(" ")
-              .append(nodeZ).append(" ")
-              .append(nodeXW).append(" ")
-              .append(nodeYW).append(" ")
-              .append(nodeZW).append(" ")
+        output.append("In leaf node (")
+              .append(nodeX).append(", ")
+              .append(nodeY).append(", ")
+              .append(nodeZ).append(", ")
+              .append(nodeXW).append(", ")
+              .append(nodeYW).append(", ")
+              .append(nodeZW).append(") ")
               .append(depth).append("\r\n");
 
         for (int i = 0; i < count; i++) {
@@ -371,28 +347,22 @@ public class LeafNode
             int iy = Math.max(obj.getYOrig(), qy);
             int iz = Math.max(obj.getZOrig(), qz);
 
-            if (ix >= nodeX && ix < nodeX + nodeXW &&
-                iy >= nodeY && iy < nodeY + nodeYW &&
-                iz >= nodeZ && iz < nodeZ + nodeZW) {
+            if (ix >= nodeX && ix < nodeX + nodeXW
+                && iy >= nodeY && iy < nodeY + nodeYW
+                && iz >= nodeZ && iz < nodeZ + nodeZW) {
+
                 output.append(obj.toString());
             }
         }
     }
+
     
     private boolean boxesIntersect(
         int ax, int ay, int az, int axW, int ayW, int azW,
         int bx, int by, int bz, int bxW, int byW, int bzW)
     {
-        int ax2 = ax + axW;
-        int ay2 = ay + ayW;
-        int az2 = az + azW;
-
-        int bx2 = bx + bxW;
-        int by2 = by + byW;
-        int bz2 = bz + bzW;
-
-        return (ax < bx2 && bx < ax2)
-            && (ay < by2 && by < ay2)
-            && (az < bz2 && bz < az2);
+        return BinTree.boxesIntersect(
+            ax, ay, az, axW, ayW, azW,
+            bx, by, bz, bxW, byW, bzW);
     }
 }

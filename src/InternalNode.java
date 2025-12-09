@@ -343,85 +343,85 @@ public class InternalNode
         int qx, int qy, int qz, int qxW, int qyW, int qzW,
         int depth)
     {
-        if (!boxesIntersect(nodeX, nodeY, nodeZ, nodeXW, nodeYW, nodeZW,
-                            qx, qy, qz, qxW, qyW, qzW)) {
+        if (!BinTree.boxesIntersect(
+            nodeX, nodeY, nodeZ, nodeXW, nodeYW, nodeZW,
+            qx, qy, qz, qxW, qyW, qzW)) {
             return;
         }
 
         BinTree.count++;
 
-        output.append("in internal node ")
-              .append(nodeX).append(" ")
-              .append(nodeY).append(" ")
-              .append(nodeZ).append(" ")
-              .append(nodeXW).append(" ")
-              .append(nodeYW).append(" ")
-              .append(nodeZW).append(" ")
+        output.append("In Internal node (")
+              .append(nodeX).append(", ")
+              .append(nodeY).append(", ")
+              .append(nodeZ).append(", ")
+              .append(nodeXW).append(", ")
+              .append(nodeYW).append(", ")
+              .append(nodeZW).append(") ")
               .append(depth).append("\r\n");
 
-        if (discriminator == 0) {
+        if (discriminator == 0) {          
             int leftXW  = nodeXW / 2;
             int rightXW = nodeXW - leftXW;
-
-            int leftX   = nodeX;
             int rightX  = nodeX + leftXW;
-            int childY  = nodeY;
-            int childZ  = nodeZ;
-            int childYW = nodeYW;
-            int childZW = nodeZW;
 
-            if (leftXW > 0 &&
-                boxesIntersect(leftX, childY, childZ, leftXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
+            if (leftXW > 0) {
                 left.intersect(output,
-                               leftX, childY, childZ,
-                               leftXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW,
-                               depth + 1);
+                    nodeX, nodeY, nodeZ,
+                    leftXW, nodeYW, nodeZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
             }
-
-            if (rightXW > 0 &&
-                boxesIntersect(rightX, childY, childZ, rightXW, childYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
+            if (rightXW > 0) {
                 right.intersect(output,
-                                rightX, childY, childZ,
-                                rightXW, childYW, childZW,
-                                qx, qy, qz, qxW, qyW, qzW,
-                                depth + 1);
+                    rightX, nodeY, nodeZ,
+                    rightXW, nodeYW, nodeZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
             }
         }
         else if (discriminator == 1) {
             int leftYW  = nodeYW / 2;
             int rightYW = nodeYW - leftYW;
-
-            int leftY   = nodeY;
             int rightY  = nodeY + leftYW;
-            int childX  = nodeX;
-            int childZ  = nodeZ;
-            int childXW = nodeXW;
-            int childZW = nodeZW;
 
-            if (leftYW > 0 &&
-                boxesIntersect(childX, leftY, childZ, childXW, leftYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
+            if (leftYW > 0) {
                 left.intersect(output,
-                               childX, leftY, childZ,
-                               childXW, leftYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW,
-                               depth + 1);
+                    nodeX, nodeY, nodeZ,
+                    nodeXW, leftYW, nodeZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
             }
-
-            if (rightYW > 0 &&
-                boxesIntersect(childX, rightY, childZ, childXW, rightYW, childZW,
-                               qx, qy, qz, qxW, qyW, qzW)) {
+            if (rightYW > 0) {
                 right.intersect(output,
-                                childX, rightY, childZ,
-                                childXW, rightYW, childZW,
-                                qx, qy, qz, qxW, qyW, qzW,
-                                depth + 1);
+                    nodeX, rightY, nodeZ,
+                    nodeXW, rightYW, nodeZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
+            }
+        }
+        else {                            
+            int leftZW  = nodeZW / 2;
+            int rightZW = nodeZW - leftZW;
+            int rightZ  = nodeZ + leftZW;
+
+            if (leftZW > 0) {
+                left.intersect(output,
+                    nodeX, nodeY, nodeZ,
+                    nodeXW, nodeYW, leftZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
+            }
+            if (rightZW > 0) {
+                right.intersect(output,
+                    nodeX, nodeY, rightZ,
+                    nodeXW, nodeYW, rightZW,
+                    qx, qy, qz, qxW, qyW, qzW,
+                    depth + 1);
             }
         }
     }
+
     
     private LeafNode copyLeaf(LeafNode src)
     {
@@ -472,20 +472,11 @@ public class InternalNode
         int bxW, int byW, int bzW,
         AirObject obj)
     {
-        int bx2 = bx + bxW;
-        int by2 = by + byW;
-        int bz2 = bz + bzW;
-
-        int ox  = obj.getXOrig();
-        int oy  = obj.getYOrig();
-        int oz  = obj.getZOrig();
-        int ox2 = ox + obj.getXWidth();
-        int oy2 = oy + obj.getYWidth();
-        int oz2 = oz + obj.getZWidth();
-
-        return (bx < ox2 && ox < bx2)
-            && (by < oy2 && oy < by2)
-            && (bz < oz2 && oz < bz2);
+        return BinTree.boxesIntersect(
+            bx,  by,  bz,
+            bxW, byW, bzW,
+            obj.getXOrig(), obj.getYOrig(), obj.getZOrig(),
+            obj.getXWidth(), obj.getYWidth(), obj.getZWidth());
     }
 
 
@@ -535,22 +526,5 @@ public class InternalNode
             }
         }
         return false;
-    }
-    
-    private boolean boxesIntersect(
-        int ax, int ay, int az, int axW, int ayW, int azW,
-        int bx, int by, int bz, int bxW, int byW, int bzW)
-    {
-        int ax2 = ax + axW;
-        int ay2 = ay + ayW;
-        int az2 = az + azW;
-
-        int bx2 = bx + bxW;
-        int by2 = by + byW;
-        int bz2 = bz + bzW;
-
-        return (ax < bx2 && bx < ax2)
-            && (ay < by2 && by < ay2)
-            && (az < bz2 && bz < az2);
     }
 }
