@@ -819,6 +819,13 @@ public class AirControlTest extends TestCase {
         w.add(new Balloon("B4", 16, 16, 16, 10, 10, 10, "air", 5));
 
         assertNotNull(w.intersect(0, 0, 0, 200, 200, 200));
+        assertFuzzyEquals( "The following objects intersect (0 0 0 200 200 200):\r\n" 
+            +"in leaf node 0 0 0 1024 1024 1024 0\r\n"
+            + "balloon b1 10 10 10 20 20 20 air 5\r\n"
+            + "balloon b2 12 12 12 18 18 18 air 5\r\n"
+            + "balloon b3 15 15 15 10 10 10 air 5\r\n"
+            + "balloon b4 16 16 16 10 10 10 air 5\r\n"
+            + "1 nodes were visited in the bintree", w.intersect(0,0,0,200,200,200)); 
         
         assertFuzzyEquals("leaf with 4 objects 0 0 0 1024 1024 1024 0\r\n"
             + "balloon b1 10 10 10 20 20 20 air 5\r\n"
@@ -827,5 +834,87 @@ public class AirControlTest extends TestCase {
             + "balloon b4 16 16 16 10 10 10 air 5\r\n"
             + "1 bintree nodes printed", w.printbintree());      
     }
-    
+    /**
+     * Tests intersection when there are no air objects
+     * @throws Exception
+     */
+    public void testIntersect() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        
+        assertTrue(w.add(new Balloon("B1", 100, 11, 101, 21, 12, 31, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 520, 342, 30, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("D1", 100, 1010, 101, 924, 2, 900, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("B2", 0, 100, 20, 103, 50, 530, "Dinosaur",
+            1)));
+        assertFuzzyEquals(
+        "The following objects intersect (0 0 0 1024 1024 1024):\r\n" 
+        + "in internal node 0 0 0 1024 1024 1024 0\r\n"
+        + "in internal node 0 0 0 512 1024 1024 1\r\n"
+        +"in leaf node 0 0 0 512 512 1024 2\r\n"
+        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
+        +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
+        +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
+        +"in leaf node 0 512 0 512 512 1024 2\r\n"
+        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
+        +"in leaf node 512 0 0 512 1024 1024 1\r\n"
+        +"5 nodes were visited in the bintree\r\n",
+        w.intersect(0, 0, 0, 1024, 1024, 1024));        
+        assertFuzzyEquals(
+        "The following objects intersect (20 20 20 104 104 104):\r\n" 
+        + "in internal node 0 0 0 1024 1024 1024 0\r\n"
+        + "in internal node 0 0 0 512 1024 1024 1\r\n"
+        +"in leaf node 0 0 0 512 512 1024 2\r\n"
+//        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
+        +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
+        +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
+        +"in leaf node 0 512 0 512 512 1024 2\r\n"
+//        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
+        +"in leaf node 512 0 0 512 1024 1024 1\r\n"
+        +"5 nodes were visited in the bintree\r\n",
+        w.intersect(20, 20, 20, 104, 104, 104));   
+        assertFuzzyEquals(
+        "The following objects intersect (500 520 900 104 104 104):\r\n" 
+        + "in internal node 0 0 0 1024 1024 1024 0\r\n"
+        + "in internal node 0 0 0 512 1024 1024 1\r\n"
+        +"in leaf node 0 0 0 512 512 1024 2\r\n"
+//        +"airplane a1 0 210 100 520 342 30 usair 717 4\r\n"
+//        +"balloon b1 100 11 101 21 12 31 hot_air 15\r\n"
+//        +"bird b2 0 100 20 103 50 530 dinosaur 1\r\n"
+        +"in leaf node 0 512 0 512 512 1024 2\r\n"
+//        +"drone d1 100 1010 101 924 2 900 droners 3\r\n"
+        +"in leaf node 512 0 0 512 1024 1024 1\r\n"
+        +"5 nodes were visited in the bintree\r\n",
+        w.intersect(500, 520, 900, 104, 104, 104)); 
+    }
+    /**
+     * adds mutation testing for clear
+     */
+    public void testClear() throws Exception {
+        Random rnd = new Random();
+        rnd.setSeed(0xCAFEBEEF);
+        WorldDB w = new WorldDB(rnd);
+        w.clear();
+        assertTrue(w.add(new Balloon("B1", 100, 11, 101, 21, 12, 31, "hot_air",
+            15)));
+        assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 520, 342, 30, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("D1", 100, 1010, 101, 924, 2, 900, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("B2", 0, 100, 20, 103, 50, 530, "Dinosaur",
+            1)));
+        w.clear();
+        assertTrue(w.add(new AirPlane("A1", 0, 210, 100, 520, 342, 30, "USAir",
+            717, 4)));
+        assertTrue(w.add(new Drone("D1", 100, 1010, 101, 924, 2, 900, "Droners",
+            3)));
+        assertTrue(w.add(new Bird("B2", 0, 100, 20, 103, 50, 530, "Dinosaur",
+            1)));
+        w.delete("B2");
+        w.clear();
+    }
 }
