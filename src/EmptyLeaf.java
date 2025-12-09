@@ -62,7 +62,9 @@ public class EmptyLeaf
      */
     public String print(int x, int y, int z, int xW, int yW, int zW, int depth)
     {
-        return "";
+        BinTree.addCount();
+        return "E (" + x + ", " + y + ", " + z + ", " + xW + ", " + yW
+            + ", " + zW + ") " + depth + "\r\n";
     }
 
 
