@@ -288,21 +288,53 @@ public class LeafNode
         int zW,
         int depth)
     {
+//        output.append("In leaf node (")
+//            .append(x).append(", ")
+//            .append(y).append(", ")
+//            .append(z).append(", ")
+//            .append(xW).append(", ")
+//            .append(yW).append(", ")
+//            .append(zW).append(") ")
+//            .append(depth).append("\r\n");
+//
+//        for (int i = 0; i < count; i++) {
+//            AirObject a = objects[i];
+//            for (int j = i + 1; j < count; j++) {
+//                AirObject b = objects[j];
+//                if (twoIntersect(a, b)) {
+//                    // keep trim() so you don’t get embedded newlines
+//                    output.append("(")
+//                          .append(a.toString().trim())
+//                          .append(" and ")
+//                          .append(b.toString().trim())
+//                          .append(")\r\n");
+//                }
+//            }
+//        }
         output.append("In leaf node (")
-            .append(x).append(", ")
-            .append(y).append(", ")
-            .append(z).append(", ")
-            .append(xW).append(", ")
-            .append(yW).append(", ")
-            .append(zW).append(") ")
-            .append(depth).append("\r\n");
+        .append(x).append(", ")
+        .append(y).append(", ")
+        .append(z).append(", ")
+        .append(xW).append(", ")
+        .append(yW).append(", ")
+        .append(zW).append(") ")
+        .append(depth).append("\r\n");
 
-        for (int i = 0; i < count; i++) {
-            AirObject a = objects[i];
-            for (int j = i + 1; j < count; j++) {
-                AirObject b = objects[j];
-                if (twoIntersect(a, b)) {
-                    // keep trim() so you don’t get embedded newlines
+    for (int i = 0; i < count; i++) {
+        AirObject a = objects[i];
+        for (int j = i + 1; j < count; j++) {
+            AirObject b = objects[j];
+            if (twoIntersect(a, b)) {
+                // Calculate the origin of the intersection box
+                int ix = Math.max(a.getXOrig(), b.getXOrig());
+                int iy = Math.max(a.getYOrig(), b.getYOrig());
+                int iz = Math.max(a.getZOrig(), b.getZOrig());
+                
+                // Only report if the intersection origin is within this node
+                if (ix >= x && ix < x + xW
+                    && iy >= y && iy < y + yW
+                    && iz >= z && iz < z + zW) {
+                    
                     output.append("(")
                           .append(a.toString().trim())
                           .append(" and ")
@@ -311,6 +343,7 @@ public class LeafNode
                 }
             }
         }
+    }
     }
 
     
