@@ -5,9 +5,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class AirObject
-    implements Comparable<AirObject>
-{
+public class AirObject implements Comparable<AirObject> {
     // ~ Fields ................................................................
 
     private int xOrig;
@@ -37,8 +35,7 @@ public class AirObject
      * @param n
      *            object name
      */
-    public AirObject(int xO, int yO, int zO, int xW, int yW, int zW, String n)
-    {
+    public AirObject(int xO, int yO, int zO, int xW, int yW, int zW, String n) {
         xOrig = xO;
         yOrig = yO;
         zOrig = zO;
@@ -55,8 +52,7 @@ public class AirObject
      * 
      * @return x-cord for origin
      */
-    public int getXOrig()
-    {
+    public int getXOrig() {
         return xOrig;
     }
 
@@ -66,8 +62,7 @@ public class AirObject
      * 
      * @return y-cord for origin
      */
-    public int getYOrig()
-    {
+    public int getYOrig() {
         return yOrig;
     }
 
@@ -77,8 +72,7 @@ public class AirObject
      * 
      * @return z-cord for origin
      */
-    public int getZOrig()
-    {
+    public int getZOrig() {
         return zOrig;
     }
 
@@ -88,8 +82,7 @@ public class AirObject
      * 
      * @return x-cord for width
      */
-    public int getXWidth()
-    {
+    public int getXWidth() {
         return xWidth;
     }
 
@@ -99,8 +92,7 @@ public class AirObject
      * 
      * @return y-cord for width
      */
-    public int getYWidth()
-    {
+    public int getYWidth() {
         return yWidth;
     }
 
@@ -110,8 +102,7 @@ public class AirObject
      * 
      * @return z-cord for width
      */
-    public int getZWidth()
-    {
+    public int getZWidth() {
         return zWidth;
     }
 
@@ -121,8 +112,7 @@ public class AirObject
      * 
      * @return object name
      */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
@@ -130,21 +120,24 @@ public class AirObject
     /**
      * Compares the names of two air objects
      * 
+     * @param other the other air object
      * @return 0 if names are equal, negative or positive value if names are
-     *             different
+     *         different
      */
-    public int compareTo(AirObject other)
-    {
+    public int compareTo(AirObject other) {
         return this.name.compareTo(other.getName());
     }
+
+
     /**
      * sees if the input would be valid
      * 
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-        return !(xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023 || zOrig < 0 || zOrig > 1023
-            ||getXWidth()<1||getXWidth()+xOrig>1025||getYWidth()<1||getYWidth()+yOrig>1025
-            ||getZWidth()<1||getZWidth()+zOrig>1025||name==null);
+        return !(xOrig < 0 || xOrig > 1024 || yOrig < 0 || yOrig > 1023
+            || zOrig < 0 || zOrig > 1023 || getXWidth() < 1 || getXWidth()
+                + xOrig > 1025 || getYWidth() < 1 || getYWidth() + yOrig > 1025
+            || getZWidth() < 1 || getZWidth() + zOrig > 1025 || name == null);
     }
 }

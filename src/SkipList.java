@@ -5,8 +5,10 @@ import java.util.Random;
  * 
  * @author madelync05 and ellae
  * @version Fall 2025
+ * @param <K> 
+ * @param <V> 
  */
-public class SkipList<K extends Comparable<K>, V> // why k and v
+public class SkipList<K extends Comparable<K>, V>
 {
     // ~ Fields ................................................................
     private static class SkipNode<K, V> {
@@ -64,6 +66,11 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
 
 
     // ~Public Methods ........................................................
+    // ----------------------------------------------------------
+    /**
+     * gets a random level
+     * @return random number
+     */
     int randomLevel() {
         int lev;
         for (lev = 0; Math.abs(ran.nextInt()) % 2 == 0; lev++) {
@@ -86,20 +93,16 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
     }
 
 
-    /** Insert a key, element pair into the skip list */
+    /** Insert a key, element pair into the skip list 
+     * @param key
+     * @param value
+     * @return boolean true if inserted false otherwise*/
     @SuppressWarnings("unchecked")
     public boolean insert(K key, V value) {
-//        if(!(find(key)==null)){
-//            return false;
-//        }
-
         int newLevel = randomLevel();
-// System.out.println("Key "+key+"\n value "+value.toString());
-// System.out.println("level "+level+" new level "+newLevel);
-        if (newLevel > level) { // If new node is deeper
+        if (newLevel > level) { 
             adjustHead(newLevel); // adjust the header
         }
-// System.out.println("level "+level+" new level "+newLevel);
         SkipNode<K, V>[] update = new SkipNode[level + 1];
         SkipNode<K, V> x = head;
         for (int i = level; i >= 0; i--) {
@@ -128,6 +131,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
 
     /**
      * prints the skip list
+     * @return String representation of skiplist
      */
     @SuppressWarnings("rawtypes")
     public String print() {
@@ -154,7 +158,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
      * 
      * @param key
      *            the key value that is to be removed.
-     * @return String representing the key that was removed, null otherwise
+     * @return V representing the key that was removed, null otherwise
      */
     @SuppressWarnings("unchecked")
     public V deleteKey(K key) {
@@ -193,7 +197,7 @@ public class SkipList<K extends Comparable<K>, V> // why k and v
     /**
      * gets a singular key if it exists
      * 
-     * @param k
+     * @param key
      *            the key to search for
      * @return String a string representation of the k if it exists, null
      *         otherwise

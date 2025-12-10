@@ -5,9 +5,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class Balloon
-    extends AirObject
-{
+public class Balloon extends AirObject {
     // ~ Fields ................................................................
     private String type;
     private int ascentRate;
@@ -44,8 +42,7 @@ public class Balloon
         int yWidth,
         int zWidth,
         String t,
-        int ar)
-    {
+        int ar) {
         super(x, y, z, xWidth, yWidth, zWidth, n);
         type = t;
         ascentRate = ar;
@@ -58,8 +55,7 @@ public class Balloon
      * 
      * @return balloon type
      */
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
@@ -69,10 +65,11 @@ public class Balloon
      * 
      * @return ascent rate
      */
-    public int getAscentRate()
-    {
+    public int getAscentRate() {
         return ascentRate;
     }
+
+
     /**
      * sees if the input would be valid
      * 
@@ -82,16 +79,19 @@ public class Balloon
         if (!super.isValid()) {
             return false;
         }
-        return !(type==null||ascentRate<1);
+        return !(type == null || ascentRate < 1);
     }
+
+
     /**
      * to string method for the object
+     * 
      * @return a string representation of the object
      */
     public String toString() {
-        return "Balloon "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
-            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+ascentRate
-            + "\n"; 
-        
+        return "Balloon " + getName() + " " + getXOrig() + " " + getYOrig()
+            + " " + getZOrig() + " " + getXWidth() + " " + getYWidth() + " "
+            + getZWidth() + " " + type + " " + ascentRate + "\n";
+
     }
 }

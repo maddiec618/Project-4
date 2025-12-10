@@ -5,9 +5,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class AirPlane
-    extends AirObject
-{
+public class AirPlane extends AirObject {
     // ~ Fields ................................................................
     private String carrier;
     private int flightNum;
@@ -48,8 +46,7 @@ public class AirPlane
         int zWidth,
         String c,
         int flight,
-        int engines)
-    {
+        int engines) {
         super(x, y, z, xWidth, yWidth, zWidth, n);
         carrier = c;
         flightNum = flight;
@@ -63,8 +60,7 @@ public class AirPlane
      * 
      * @return carrier name
      */
-    public String getCarrier()
-    {
+    public String getCarrier() {
         return carrier;
     }
 
@@ -74,8 +70,7 @@ public class AirPlane
      * 
      * @return flight number
      */
-    public int getFlightNumber()
-    {
+    public int getFlightNumber() {
         return flightNum;
     }
 
@@ -85,10 +80,11 @@ public class AirPlane
      * 
      * @return number of engines
      */
-    public int getEngines()
-    {
+    public int getEngines() {
         return numEngines;
-    }    
+    }
+
+
     /**
      * sees if the input would be valid
      * 
@@ -98,16 +94,20 @@ public class AirPlane
         if (!super.isValid()) {
             return false;
         }
-            return !(carrier==null||flightNum<1||numEngines<1);
+        return !(carrier == null || flightNum < 1 || numEngines < 1);
     }
+
+
     /**
      * to string method for the object
+     * 
      * @return a string representation of the object
      */
     public String toString() {
-        return "Airplane "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
-            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ carrier+" "+flightNum
-            +" "+ numEngines+ "\n"; 
-        
+        return "Airplane " + getName() + " " + getXOrig() + " " + getYOrig()
+            + " " + getZOrig() + " " + getXWidth() + " " + getYWidth() + " "
+            + getZWidth() + " " + carrier + " " + flightNum + " " + numEngines
+            + "\n";
+
     }
 }

@@ -5,9 +5,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class Rocket
-    extends AirObject
-{
+public class Rocket extends AirObject {
     // ~ Fields ................................................................
     private int ascentRate;
     private double trajectory;
@@ -44,8 +42,7 @@ public class Rocket
         int yWidth,
         int zWidth,
         int ar,
-        double t)
-    {
+        double t) {
         super(x, y, z, xWidth, yWidth, zWidth, n);
         ascentRate = ar;
         trajectory = t;
@@ -58,8 +55,7 @@ public class Rocket
      * 
      * @return ascent rate
      */
-    public int getAscentRate()
-    {
+    public int getAscentRate() {
         return ascentRate;
     }
 
@@ -69,32 +65,36 @@ public class Rocket
      * 
      * @return rocket's trajectory
      */
-    public double getTrajectory()
-    {
+    public double getTrajectory() {
         return trajectory;
     }
+
+
     /**
      * sees if the input would be valid
      * 
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-//        if (!super.isValid()) {
-//            return false;
-//        }
-        return !(ascentRate<1||trajectory<1);
+// if (!super.isValid()) {
+// return false;
+// }
+        return !(ascentRate < 1 || trajectory < 1);
     }
+
+
     /**
      * to string method for the object
+     * 
      * @return a string representation of the object
      */
     public String toString() {
-//        if (getName()==null) {
-//            return null;
-//        }
-        return "Rocket "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
-            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ ascentRate+" "+trajectory
-            + "\n"; 
-        
+// if (getName()==null) {
+// return null;
+// }
+        return "Rocket " + getName() + " " + getXOrig() + " " + getYOrig() + " "
+            + getZOrig() + " " + getXWidth() + " " + getYWidth() + " "
+            + getZWidth() + " " + ascentRate + " " + trajectory + "\n";
+
     }
 }

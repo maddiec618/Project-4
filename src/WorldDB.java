@@ -3,13 +3,13 @@ import java.util.Random;
 /**
  * The world for this project. We have a Skip List and a Bintree
  *
- * @author {Your Name Here}
- * @version {Put Something Here}
+ * @author madelync05 and ellae
+ * @version 1
  */
 public class WorldDB implements ATC {
     private final int worldSize = 1024;
     private Random rnd;
-     /*
+    /*
      * should have an empty skip list
      */
     private SkipList<String, AirObject> skip;
@@ -26,9 +26,9 @@ public class WorldDB implements ATC {
     public WorldDB(Random r) {
         bin = new BinTree(worldSize);
         rnd = r;
-//        if (rnd == null) {
-//            rnd = new Random();
-//        }
+// if (rnd == null) {
+// rnd = new Random();
+// }
         skip = new SkipList<String, AirObject>(r);
         objects = new AirObject[128];
         objCount = 0;
@@ -68,9 +68,9 @@ public class WorldDB implements ATC {
 
         skip.insert(a.getName(), a);
         bin.insert(a);
-        
+
         objects[objCount++] = a;
-        
+
         return true;
     }
 
@@ -90,10 +90,10 @@ public class WorldDB implements ATC {
         if (value == null)
             return null;
         bin.delete(value);
-        
+
         for (int i = 0; i < objCount; i++) {
-            if (objects[i] != null
-                && objects[i].getName().equals(value.getName())) {
+            if (objects[i] != null && objects[i].getName().equals(value
+                .getName())) {
                 // shift tail left
                 for (int j = i; j < objCount - 1; j++) {
                     objects[j] = objects[j + 1];
@@ -103,7 +103,7 @@ public class WorldDB implements ATC {
                 break;
             }
         }
-        
+
         return value.toString();
     }
 
@@ -167,7 +167,8 @@ public class WorldDB implements ATC {
             return null;
         }
 
-        String objectsInRange = "Found these records in the range " + start + " to " + end + "\r\n";
+        String objectsInRange = "Found these records in the range " + start
+            + " to " + end + "\r\n";
 
         AirObject[] matches = new AirObject[objCount];
         int m = 0;

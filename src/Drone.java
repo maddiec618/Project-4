@@ -5,13 +5,12 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class Drone extends AirObject
-{
-    //~ Fields ................................................................
+public class Drone extends AirObject {
+    // ~ Fields ................................................................
     private String brand;
     private int numEngines;
-    
-    //~ Constructors ..........................................................
+
+    // ~ Constructors ..........................................................
     /**
      * Create a new Drone object.
      * 
@@ -43,21 +42,20 @@ public class Drone extends AirObject
         int yWidth,
         int zWidth,
         String b,
-        int engines)
-    {
+        int engines) {
         super(x, y, z, xWidth, yWidth, zWidth, n);
         brand = b;
         numEngines = engines;
     }
-    
-    //~Public  Methods ........................................................
+
+
+    // ~Public Methods ........................................................
     /**
      * Returns the name of the brand
      * 
      * @return brand name
      */
-    public String getBrand()
-    {
+    public String getBrand() {
         return brand;
     }
 
@@ -67,32 +65,36 @@ public class Drone extends AirObject
      * 
      * @return number of engines
      */
-    public int getEngines()
-    {
+    public int getEngines() {
         return numEngines;
     }
+
+
     /**
      * sees if the input would be valid
      * 
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-//        if (!super.isValid()) {
-//            return false;
-//        }
-        return !(brand==null||numEngines<1);
+// if (!super.isValid()) {
+// return false;
+// }
+        return !(brand == null || numEngines < 1);
     }
+
+
     /**
      * to string method for the object
+     * 
      * @return a string representation of the object
      */
     public String toString() {
-//        if (getName()==null) {
-//            return null;
-//        }
-        return "Drone "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
-            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ brand+" "
-            + numEngines+ "\n"; 
-        
+// if (getName()==null) {
+// return null;
+// }
+        return "Drone " + getName() + " " + getXOrig() + " " + getYOrig() + " "
+            + getZOrig() + " " + getXWidth() + " " + getYWidth() + " "
+            + getZWidth() + " " + brand + " " + numEngines + "\n";
+
     }
 }

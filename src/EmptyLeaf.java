@@ -6,25 +6,33 @@
  * @author madelync05 & ellae
  * @version Dec 1, 2025
  */
-public class EmptyLeaf
-    implements BaseNode
-{
+public class EmptyLeaf implements BaseNode {
     // ~ Fields ................................................................
     private static final EmptyLeaf INSTANCE = new EmptyLeaf();
 
     // ~ Constructors ..........................................................
-    private EmptyLeaf()
-    {
+    private EmptyLeaf() {
     }
 
-    public static EmptyLeaf getInstance()
-    {
+
+    public static EmptyLeaf getInstance() {
         return INSTANCE;
     }
 
     // ~Public Methods ........................................................
 
-
+    /**
+     * inserts object into leaf
+     * @param obj
+     * @param x 
+     * @param y
+     * @param z
+     * @param xW
+     * @param yW
+     * @param zW
+     * @param depth 
+     * @return BaseNode
+     */
     public BaseNode insert(
         AirObject obj,
         int x,
@@ -33,8 +41,7 @@ public class EmptyLeaf
         int xW,
         int yW,
         int zW,
-        int depth)
-    {
+        int depth) {
         LeafNode leaf = new LeafNode();
         leaf.addObject(obj);
         return leaf;
@@ -60,14 +67,41 @@ public class EmptyLeaf
      *            depth of node
      * @return String output
      */
-    public String print(int x, int y, int z, int xW, int yW, int zW, int depth)
-    {
+    public String print(
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int depth) {
         BinTree.addCount();
-        return "E (" + x + ", " + y + ", " + z + ", " + xW + ", " + yW
-            + ", " + zW + ") " + depth + "\r\n";
+        return "E (" + x + ", " + y + ", " + z + ", " + xW + ", " + yW + ", "
+            + zW + ") " + depth + "\r\n";
     }
 
 
+    /**
+     * Deletes a node object from the subtree.
+     * 
+     * @param obj
+     *            Object being inserted
+     * @param x
+     *            x-cord for origin
+     * @param y
+     *            y-cord for origin
+     * @param z
+     *            z-cord for origin
+     * @param xW
+     *            x-cord for width
+     * @param yW
+     *            y-cord for width
+     * @param zW
+     *            z-cord for width
+     * @param depth
+     *            depth of node
+     * @return BaseNode that now represents root
+     */
     @Override
     public BaseNode delete(
         AirObject obj,
@@ -78,10 +112,10 @@ public class EmptyLeaf
         int yW,
         int zW,
         int depth) {
-        // TODO Auto-generated method stub
         return this;
     }
-    
+
+
     public void collision(
         StringBuilder output,
         int x,
@@ -90,18 +124,26 @@ public class EmptyLeaf
         int xW,
         int yW,
         int zW,
-        int depth)
-    {
+        int depth) {
         // no objects, no collisions, no header needed
     }
-    
+
+
     public void intersect(
         StringBuilder output,
-        int x, int y, int z,
-        int xW, int yW, int zW,
-        int qx, int qy, int qz, int qxW, int qyW, int qzW,
-        int depth)
-    {
+        int x,
+        int y,
+        int z,
+        int xW,
+        int yW,
+        int zW,
+        int qx,
+        int qy,
+        int qz,
+        int qxW,
+        int qyW,
+        int qzW,
+        int depth) {
         BinTree.addCount();
     }
 }

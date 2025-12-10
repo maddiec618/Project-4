@@ -9,8 +9,8 @@ import java.io.IOException;
  * Aside from adding a description, your name(s), and the version,
  * you probably don't need to edit this file.
  *
- * @author {Your Name Here}
- * @version {Put Something Here}
+ * @author madelync05 and ellae
+ * @version 1
  */
 
 //On my honor:

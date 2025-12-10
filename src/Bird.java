@@ -5,9 +5,7 @@
  * @author madelync05 and ellae
  * @version Fall 2025
  */
-public class Bird
-    extends AirObject
-{
+public class Bird extends AirObject {
     // ~ Fields ................................................................
     private String type;
     private int number;
@@ -44,8 +42,7 @@ public class Bird
         int yWidth,
         int zWidth,
         String t,
-        int num)
-    {
+        int num) {
         super(x, y, z, xWidth, yWidth, zWidth, n);
         type = t;
         number = num;
@@ -58,8 +55,7 @@ public class Bird
      * 
      * @return bird type
      */
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
@@ -69,29 +65,33 @@ public class Bird
      * 
      * @return bird's number
      */
-    public int getNumber()
-    {
+    public int getNumber() {
         return number;
     }
+
+
     /**
      * sees if the input would be valid
      * 
      * @return true if the object is valid, false otherwise
      */
     public boolean isValid() {
-//        if (!super.isValid()) {
-//            return false;
-//        }
-        return !(type==null||number<1);
+// if (!super.isValid()) {
+// return false;
+// }
+        return !(type == null || number < 1);
     }
+
+
     /**
      * to string method for the object
+     * 
      * @return a string representation of the object
      */
     public String toString() {
-        return "Bird "+ getName() +" "+ getXOrig()+" "+getYOrig() +" "+getZOrig()+
-            " "+getXWidth()+ " "+ getYWidth()+" "+getZWidth()+ " "+ type+" "+number
-           + "\n"; 
-        
+        return "Bird " + getName() + " " + getXOrig() + " " + getYOrig() + " "
+            + getZOrig() + " " + getXWidth() + " " + getYWidth() + " "
+            + getZWidth() + " " + type + " " + number + "\n";
+
     }
 }
